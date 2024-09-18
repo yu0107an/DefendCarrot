@@ -1,0 +1,94 @@
+	
+{
+	"range":[120,140,160,210,240,320],
+	"rangeimg":
+	[
+		"range_120.png",
+		"range_140.png",
+		"range_160.png",
+		"range_210.png",
+		"range_240.png",
+		"range_320.png"
+	],
+	
+	"rewardgold":[2,14,50,75,85,150,168,268,999,1000,1500],
+	"rewardgoldimg":
+	[
+		"money02.png",
+		"money14.png",
+		"money50.png",
+		"money75.png",
+		"money85.png",
+		"money150.png",
+		"money168.png",
+		"money268.png",
+		"money999.png",
+		"money1000.png",
+		"money1500.png"
+	],
+	
+	"upgradegold":[-180,-220,-260,-320,-380,-480,180,220,260,320,380,480],
+	"upgradegoldimg":
+	[
+		"upgrade_-180.png",
+		"upgrade_-220.png",
+		"upgrade_-260.png",
+		"upgrade_-320.png",
+		"upgrade_-380.png",
+		"upgrade_-480.png",
+		"upgrade_180.png",
+		"upgrade_220.png",
+		"upgrade_260.png",
+		"upgrade_320.png",
+		"upgrade_380.png",
+		"upgrade_480.png"
+	],
+	
+	"sellgold":[80,96,128,144,176,208,224,256,272,304,336,352,384,432,464,480,512,560,592,608,640,688,736,768],
+	"sellgoldimg":
+	[
+		"sell_80.png",
+		"sell_96.png",
+		"sell_128.png",
+		"sell_144.png",
+		"sell_176.png",
+		"sell_208.png",
+		"sell_224.png",
+		"sell_256.png",
+		"sell_272.png",
+		"sell_304.png",
+		"sell_336.png",
+		"sell_352.png",
+		"sell_384.png",
+		"sell_432.png",
+		"sell_464.png",
+		"sell_480.png",
+		"sell_512.png",
+		"sell_560.png",
+		"sell_592.png",
+		"sell_608.png",
+		"sell_640.png",
+		"sell_688.png",
+		"sell_736.png",
+		"sell_768.png"
+	],
+	"bookmark":[0,1,2,3,4,5,6,7,8,9,10,11,12],
+	"bookmarkimg":
+	[
+		"bookmark_0-12.png",
+		"bookmark_1-12.png",
+		"bookmark_2-12.png",
+		"bookmark_3-12.png",
+		"bookmark_4-12.png",
+		"bookmark_5-12.png",
+		"bookmark_6-12.png",
+		"bookmark_7-12.png",
+		"bookmark_8-12.png",
+		"bookmark_9-12.png",
+		"bookmark_10-12.png",
+		"bookmark_11-12.png",
+		"bookmark_12-12.png"
+	]
+	
+}
+
