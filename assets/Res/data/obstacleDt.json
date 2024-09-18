@@ -1,0 +1,17 @@
+[
+	{
+		"obstacletype":3001,
+		"hp":400,
+		"reward":50
+	},
+	{
+		"obstacletype":3002,
+		"hp":800,
+		"reward":75
+	},
+	{
+		"obstacletype":3003,
+		"hp":1200,
+		"reward":85
+	}
+]

@@ -1,0 +1,134 @@
+{
+  "ver": "1.0.26",
+  "importer": "image",
+  "imported": true,
+  "uuid": "dd639797-aa1e-4d56-870c-bc41411688d3",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "dd639797-aa1e-4d56-870c-bc41411688d3@6c48a",
+      "displayName": "weibo-hd.pvr.ccz",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "clamp-to-edge",
+        "wrapModeT": "clamp-to-edge",
+        "imageUuidOrDatabaseUri": "dd639797-aa1e-4d56-870c-bc41411688d3",
+        "isUuid": true,
+        "visible": false,
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "f9941": {
+      "importer": "sprite-frame",
+      "uuid": "dd639797-aa1e-4d56-870c-bc41411688d3@f9941",
+      "displayName": "weibo-hd.pvr.ccz",
+      "id": "f9941",
+      "name": "spriteFrame",
+      "userData": {
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 0,
+        "offsetY": 0,
+        "trimX": 4,
+        "trimY": 4,
+        "width": 902,
+        "height": 100,
+        "rawWidth": 910,
+        "rawHeight": 108,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [
+            -451,
+            -50,
+            0,
+            451,
+            -50,
+            0,
+            -451,
+            50,
+            0,
+            451,
+            50,
+            0
+          ],
+          "indexes": [
+            0,
+            1,
+            2,
+            2,
+            1,
+            3
+          ],
+          "uv": [
+            4,
+            104,
+            906,
+            104,
+            4,
+            4,
+            906,
+            4
+          ],
+          "nuv": [
+            0.004395604395604396,
+            0.037037037037037035,
+            0.9956043956043956,
+            0.037037037037037035,
+            0.004395604395604396,
+            0.9629629629629629,
+            0.9956043956043956,
+            0.9629629629629629
+          ],
+          "minPos": [
+            -451,
+            -50,
+            0
+          ],
+          "maxPos": [
+            451,
+            50,
+            0
+          ]
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "dd639797-aa1e-4d56-870c-bc41411688d3@6c48a",
+        "atlasUuid": ""
+      },
+      "ver": "1.0.12",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "type": "sprite-frame",
+    "hasAlpha": true,
+    "fixAlphaTransparencyArtifacts": false,
+    "redirect": "dd639797-aa1e-4d56-870c-bc41411688d3@f9941"
+  }
+}

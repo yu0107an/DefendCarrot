@@ -1,0 +1,63 @@
+{
+  "ver": "1.0.8",
+  "importer": "sprite-atlas",
+  "imported": true,
+  "uuid": "f88a6225-fadc-43ed-81c2-28636aeb8f8d",
+  "files": [
+    ".json"
+  ],
+  "subMetas": {
+    "b6018": {
+      "importer": "sprite-frame",
+      "uuid": "f88a6225-fadc-43ed-81c2-28636aeb8f8d@b6018",
+      "displayName": "",
+      "id": "b6018",
+      "name": "darkbg",
+      "userData": {
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 0,
+        "offsetY": 0,
+        "trimX": 0,
+        "trimY": 0,
+        "width": 960,
+        "height": 640,
+        "rawWidth": 960,
+        "rawHeight": 640,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [],
+          "indexes": [],
+          "uv": [],
+          "nuv": [],
+          "minPos": [],
+          "maxPos": []
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "e213a2c0-68a7-4aa5-bfd2-b17c2c7e5f8e@6c48a",
+        "atlasUuid": "f88a6225-fadc-43ed-81c2-28636aeb8f8d"
+      },
+      "ver": "1.0.12",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "atlasTextureName": "darkbg-hd.pvr.ccz.png",
+    "format": 2,
+    "uuid": "f88a6225-fadc-43ed-81c2-28636aeb8f8d",
+    "textureUuid": "e213a2c0-68a7-4aa5-bfd2-b17c2c7e5f8e@6c48a"
+  }
+}

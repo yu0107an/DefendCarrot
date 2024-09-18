@@ -1,0 +1,119 @@
+[
+	{
+		"monsterid":4001,
+		"hp":50,
+		"speed":100,
+		"moveImg":
+		[
+			"land_pink01.png",
+			"land_pink02.png"
+		],
+		"deathmusic":["Music/Monsters/Land111.ogg"],
+		"reward":14
+		
+	},
+	
+	{
+		"monsterid":4002,
+		"hp":50,
+		"speed":100,
+		"moveImg":
+		[
+			"land_star01.png",
+			"land_star02.png"
+		],
+		"deathmusic":["Music/Monsters/Land112.ogg"],
+		"reward":14
+	},
+	
+	{
+		"monsterid":4003,
+		"hp":50,
+		"speed":100,
+		"moveImg":
+		[
+			"land_nima01.png",
+			"land_nima02.png"
+		],
+		"deathmusic":["Music/Monsters/Land113.ogg"],
+		"reward":14
+	},
+	
+	{
+		"monsterid":4004,
+		"hp":50,
+		"speed":160,
+		"moveImg":
+		[
+			"fly_yellow01.png",
+			"fly_yellow02.png"
+		],
+		"deathmusic":["Music/Monsters/Fly151.ogg"],
+		"reward":14
+	},
+	
+	{
+		"monsterid":4005,
+		"hp":50,
+		"speed":100,
+		"moveImg":
+		[
+			"fly_blue01.png",
+			"fly_blue02.png"
+		],
+		"deathmusic":["Music/Monsters/Fly152.ogg"],
+		"reward":14
+	},
+	
+	{
+		"monsterid":4006,
+		"hp":50,
+		"speed":100,
+		"moveImg":
+		[
+			"fly_blue01.png",
+			"fly_blue02.png"
+		],
+		"deathmusic":["Music/Monsters/Fly161.ogg"],
+		"reward":14
+	},
+	
+	{
+		"monsterid":4007,
+		"hp":2000,
+		"speed":30,
+		"moveImg":
+		[
+			"fly_boss_yellow01.png",
+			"fly_boss_yellow02.png"
+		],
+		"deathmusic":["Music/Monsters/Fly162.ogg"],
+		"reward":14
+	},
+	
+	{
+		"monsterid":4008,
+		"hp":2000,
+		"speed":30,
+		"moveImg":
+		[
+			"land_boss_star01.png",
+			"land_boss_star02.png"
+		],
+		"deathmusic":["Music/Monsters/Land121.ogg"],
+		"reward":14
+	},
+	
+	{
+		"monsterid":4009,
+		"hp":2000,
+		"speed":30,
+		"moveImg":
+		[
+			"land_boss_nima01.png",
+			"land_boss_nima02.png"
+		],
+		"deathmusic":["Music/Monsters/Land122.ogg"],
+		"reward":14
+	}
+]

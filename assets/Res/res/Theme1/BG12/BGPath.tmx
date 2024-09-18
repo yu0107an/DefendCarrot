@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="12" height="8" tilewidth="80" tileheight="80" infinite="0" nextlayerid="2" nextobjectid="34">
+ <properties>
+  <property name="style" value="1"/>
+ </properties>
+ <objectgroup id="1" name="PATH">
+  <object id="1" name="PT1" x="0" y="240"/>
+  <object id="2" name="PT2" x="880" y="240"/>
+  <object id="3" name="PT3" x="880" y="160"/>
+  <object id="4" name="1Ob1" type="4" x="0" y="160" width="80" height="80"/>
+  <object id="5" name="1Ob2" type="4" x="80" y="160" width="80" height="80"/>
+  <object id="6" name="1Ob3" type="4" x="160" y="160" width="80" height="80"/>
+  <object id="7" name="1Ob4" type="4" x="240" y="160" width="80" height="80"/>
+  <object id="8" name="1Ob5" type="4" x="320" y="160" width="80" height="80"/>
+  <object id="9" name="1Ob6" type="4" x="400" y="160" width="80" height="80"/>
+  <object id="10" name="1Ob7" type="4" x="480" y="160" width="80" height="80"/>
+  <object id="11" name="1Ob8" type="4" x="560" y="160" width="80" height="80"/>
+  <object id="12" name="1Ob9" type="4" x="640" y="160" width="80" height="80"/>
+  <object id="13" name="1Ob10" type="4" x="720" y="160" width="80" height="80"/>
+  <object id="14" name="1Ob11" type="4" x="800" y="160" width="80" height="80"/>
+  <object id="15" name="3Ob1" type="3" x="0" y="320" width="80" height="80"/>
+  <object id="16" name="3Ob2" type="3" x="80" y="320" width="80" height="80"/>
+  <object id="17" name="3Ob3" type="3" x="160" y="320" width="80" height="80"/>
+  <object id="18" name="3Ob4" type="3" x="240" y="320" width="80" height="80"/>
+  <object id="19" name="3Ob5" type="3" x="320" y="320" width="80" height="80"/>
+  <object id="20" name="3Ob6" type="3" x="400" y="320" width="80" height="80"/>
+  <object id="21" name="3Ob7" type="3" x="480" y="320" width="80" height="80"/>
+  <object id="22" name="3Ob8" type="3" x="560" y="320" width="80" height="80"/>
+  <object id="23" name="3Ob9" type="3" x="640" y="320" width="80" height="80"/>
+  <object id="24" name="3Ob10" type="3" x="720" y="320" width="80" height="80"/>
+  <object id="25" name="3Ob11" type="3" x="800" y="320" width="80" height="80"/>
+  <object id="26" name="3Ob12" type="3" x="880" y="320" width="80" height="80"/>
+  <object id="27" name="Obj1" x="0" y="80" width="960" height="80"/>
+  <object id="28" name="Obj2" x="0" y="400" width="960" height="80"/>
+  <object id="29" name="6Ob1" type="-1" x="240" y="480" width="160" height="160"/>
+  <object id="30" name="6Ob2" type="-1" x="560" y="480" width="160" height="160"/>
+  <object id="31" name="7Ob1" type="-1" x="400" y="480" width="160" height="160"/>
+  <object id="32" name="4Ob1" type="-1" x="80" y="480" width="160" height="80">
+   <properties>
+    <property name="flipx" value="180"/>
+   </properties>
+  </object>
+  <object id="33" name="4Ob2" type="-1" x="720" y="480" width="160" height="80"/>
+ </objectgroup>
+</map>
