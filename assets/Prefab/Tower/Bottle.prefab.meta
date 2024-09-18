@@ -1,11 +1,9 @@
 {
   "ver": "1.1.50",
   "importer": "prefab",
-  "imported": true,
+  "imported": false,
   "uuid": "3a6a39d6-78d9-44f8-8b1d-cdcfeb66be86",
-  "files": [
-    ".json"
-  ],
+  "files": [],
   "subMetas": {},
   "userData": {
     "syncNodeName": "Bottle"

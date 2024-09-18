@@ -50,7 +50,11 @@ export class EnemyLayer extends Component {
     createEnemy()
     {
         let enemyCount = this.waveDt[this.curWave - 1];
+<<<<<<< HEAD
         this.schedule(this.createEnemyTimer, 1, enemyCount - 1, 0);
+=======
+        this.schedule(this.createEnemyTimer, 1, 0, 0);
+>>>>>>> 93a3c53beff31a7b46cef040b463400ea51e8c07
     }
 
     createEnemyTimer()
@@ -62,8 +66,12 @@ export class EnemyLayer extends Component {
         }
         else
         {
+<<<<<<< HEAD
             let monsterId = this.monsterId[Math.floor(Math.random() * this.monsterId.length)];
             newEnemy = instantiate(this.enemyPrefab[monsterId]);
+=======
+
+>>>>>>> 93a3c53beff31a7b46cef040b463400ea51e8c07
         }
         this.node.addChild(newEnemy);
         newEnemy.setPosition(v3(-360, 120));

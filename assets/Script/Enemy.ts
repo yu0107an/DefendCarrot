@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 import { _decorator, Collider2D, Component, Contact2DType, IPhysics2DContact, tween, Vec3 } from 'cc';
 import { Tower } from './Tower';
+=======
+import { _decorator, Component, Node, tween, v3, Vec3 } from 'cc';
+>>>>>>> 93a3c53beff31a7b46cef040b463400ea51e8c07
 const { ccclass, property } = _decorator;
 
 @ccclass('Enemy')
@@ -13,6 +17,7 @@ export class Enemy extends Component {
     curPath: number = 1;
 
     start() {
+<<<<<<< HEAD
         
     }
 
@@ -35,6 +40,9 @@ export class Enemy extends Component {
             collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
             collider.off(Contact2DType.END_CONTACT, this.onEndContact, this);
         }
+=======
+
+>>>>>>> 93a3c53beff31a7b46cef040b463400ea51e8c07
     }
 
     init(data: any)
@@ -46,6 +54,7 @@ export class Enemy extends Component {
         this.reward = data.reward;
     }
 
+<<<<<<< HEAD
     onBeginContact(self: Collider2D, other: Collider2D, contact: IPhysics2DContact)
     {
         if (other.group === 2)
@@ -60,6 +69,16 @@ export class Enemy extends Component {
         {
             other.node.parent.getComponent(Tower).changeAttackTarget(false, self.node);
         }
+=======
+    reuse(path: any)
+    {
+        this.onMove(path);
+    }
+
+    unuse()
+    {
+        
+>>>>>>> 93a3c53beff31a7b46cef040b463400ea51e8c07
     }
 
     onMove(path: any)
@@ -80,11 +99,14 @@ export class Enemy extends Component {
     update(deltaTime: number) {
         
     }
+<<<<<<< HEAD
 
     destroySelf()
     {
         
     }
+=======
+>>>>>>> 93a3c53beff31a7b46cef040b463400ea51e8c07
 }
 
 

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { _decorator, Component, find, Node, tween, v2 } from 'cc';
+=======
+import { _decorator, Component, find, Graphics, Node, v2 } from 'cc';
+>>>>>>> 93a3c53beff31a7b46cef040b463400ea51e8c07
 import { UIControl } from './UIControl';
 const { ccclass, property } = _decorator;
 
@@ -11,9 +15,13 @@ export class Tower extends Component {
     sellPrice: number[];
     shootSpeed: number[];
     attackRange: number[];
+<<<<<<< HEAD
     attackTarget: Node[] = new Array<Node>();
     curAttackTarget: Node;
     
+=======
+
+>>>>>>> 93a3c53beff31a7b46cef040b463400ea51e8c07
     start() {
         this.node.on(Node.EventType.TOUCH_END, this.click, this);
     }
@@ -59,6 +67,7 @@ export class Tower extends Component {
         find('Canvas/UI').getComponent(UIControl).drawTowerInfo(radius, pos, upgradePrice, sellPrice, this.upgradeOrSell.bind(this));
     }
 
+<<<<<<< HEAD
     changeAttackTarget(isAdd: boolean, target: Node)
     {
         if (isAdd)
@@ -89,6 +98,10 @@ export class Tower extends Component {
     {
         let diff = (targetAngle - curAngle + 180) % 360 - 180; // 计算差值
         return curAngle + diff * t;
+=======
+    update(deltaTime: number) {
+        
+>>>>>>> 93a3c53beff31a7b46cef040b463400ea51e8c07
     }
 
     protected onDestroy(): void {
