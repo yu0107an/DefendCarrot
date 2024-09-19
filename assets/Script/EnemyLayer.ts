@@ -55,12 +55,8 @@ export class EnemyLayer extends Component {
 
     createEnemyTimer()
     {
-        let newEnemy: Node;
-        if (this.enemyPool.size() !== 0)
-        {
-            newEnemy = this.enemyPool.get(this.path);
-        }
-        else
+        let newEnemy = this.enemyPool.get(this.path);
+        if (newEnemy === null)
         {
             let monsterId = this.monsterId[Math.floor(Math.random() * this.monsterId.length)];
             newEnemy = instantiate(this.enemyPrefab[monsterId]);

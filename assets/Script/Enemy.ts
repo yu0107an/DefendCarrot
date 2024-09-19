@@ -1,5 +1,7 @@
-import { _decorator, Collider2D, Component, Contact2DType, IPhysics2DContact, tween, Vec3 } from 'cc';
+import { _decorator, Collider2D, Component, Contact2DType, find, IPhysics2DContact, tween, Vec3 } from 'cc';
 import { Tower } from './Tower';
+import { BulletLayer } from './BulletLayer';
+import { Bullet } from './Bullet';
 const { ccclass, property } = _decorator;
 
 @ccclass('Enemy')
@@ -52,6 +54,16 @@ export class Enemy extends Component {
         {
             other.node.parent.getComponent(Tower).changeAttackTarget(true, self.node);
         }
+        else if (other.group === 8)
+        {
+            let bulletTs = other.node.parent.getComponent(Bullet);
+            if (bulletTs.target === this.node)
+            {
+                let bulletLayerTs = find('Canvas/Game/BulletLayer').getComponent(BulletLayer);
+                let bulletPool = bulletLayerTs.bulletPools.get(bulletTs.id);
+                bulletPool.put(other.node.parent);
+            }
+        }
     }
 
     onEndContact(self: Collider2D, other: Collider2D, contact: IPhysics2DContact)
@@ -78,11 +90,6 @@ export class Enemy extends Component {
     }
 
     update(deltaTime: number) {
-        
-    }
-
-    destroySelf()
-    {
         
     }
 }

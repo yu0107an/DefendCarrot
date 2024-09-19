@@ -19,18 +19,7 @@
       }
     ],
     "_exoticAnimation": null,
-    "_events": [
-      {
-        "frame": 0.18333333333333332,
-        "func": "",
-        "params": []
-      },
-      {
-        "frame": 0.18333333333333332,
-        "func": "shot",
-        "params": []
-      }
-    ],
+    "_events": [],
     "_embeddedPlayers": [],
     "_additiveSettings": {
       "__id__": 6
@@ -73,30 +62,20 @@
     "__type__": "cc.ObjectCurve",
     "_times": [
       0,
-      0.08333333333333333,
-      0.18333333333333332,
-      0.26666666666666666,
+      0.16666666666666666,
       0.3333333333333333
     ],
     "_values": [
       {
-        "__uuid__": "072d4586-fdd4-4369-a0d6-f7f356d1a6ba@6e898",
+        "__uuid__": "072d4586-fdd4-4369-a0d6-f7f356d1a6ba@82765",
         "__expectedType__": "cc.SpriteFrame"
       },
       {
-        "__uuid__": "072d4586-fdd4-4369-a0d6-f7f356d1a6ba@3af1e",
+        "__uuid__": "072d4586-fdd4-4369-a0d6-f7f356d1a6ba@c5f65",
         "__expectedType__": "cc.SpriteFrame"
       },
       {
-        "__uuid__": "072d4586-fdd4-4369-a0d6-f7f356d1a6ba@687ef",
-        "__expectedType__": "cc.SpriteFrame"
-      },
-      {
-        "__uuid__": "072d4586-fdd4-4369-a0d6-f7f356d1a6ba@3af1e",
-        "__expectedType__": "cc.SpriteFrame"
-      },
-      {
-        "__uuid__": "072d4586-fdd4-4369-a0d6-f7f356d1a6ba@6e898",
+        "__uuid__": "072d4586-fdd4-4369-a0d6-f7f356d1a6ba@5cbb6",
         "__expectedType__": "cc.SpriteFrame"
       }
     ]

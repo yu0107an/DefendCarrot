@@ -1,5 +1,6 @@
-import { _decorator, Component, find, Node, tween, v2 } from 'cc';
+import { _decorator, Component, find, Node, v2, Animation } from 'cc';
 import { UIControl } from './UIControl';
+import { BulletLayer } from './BulletLayer';
 const { ccclass, property } = _decorator;
 
 @ccclass('Tower')
@@ -13,7 +14,8 @@ export class Tower extends Component {
     attackRange: number[];
     attackTarget: Node[] = new Array<Node>();
     curAttackTarget: Node;
-    
+    curState: string = 'idle';
+
     start() {
         this.node.on(Node.EventType.TOUCH_END, this.click, this);
     }
@@ -68,8 +70,32 @@ export class Tower extends Component {
         else
         {
             this.attackTarget.shift();
+            this.changeState('idle');
         }
         this.curAttackTarget = this.attackTarget[0];
+    }
+
+    changeState(state: string)
+    {
+        if (this.curState === state)
+        {
+            return;
+        }
+        this.curState = state;
+        if (this.curState === 'idle')
+        {
+            this.node.children[this.level - 1].getComponent(Animation).stop();
+        }
+        else if(this.curState === 'shot')
+        {
+            this.node.children[this.level - 1].getComponent(Animation).stop();
+            this.node.children[this.level - 1].getComponent(Animation).play();
+        }
+    }
+
+    shot()
+    {
+        find('Canvas/Game/BulletLayer').getComponent(BulletLayer).addBullet(this.id, this.level, this.node.position, this.curAttackTarget, this.node.children[this.level - 1].angle);
     }
 
     update(deltaTime: number) {
@@ -81,6 +107,10 @@ export class Tower extends Component {
             let rotation = Math.atan2(dir.y, dir.x) * (180 / Math.PI) - 90;
             this.node.children[this.level - 1].angle = this.lerpAngle(this.node.children[this.level - 1].angle, rotation, 0.15);
             
+            if (Math.floor(this.node.children[this.level - 1].angle) + 1 >= Math.floor(rotation) - 1)
+            {
+                this.changeState('shot');
+            }
         }
     }
 

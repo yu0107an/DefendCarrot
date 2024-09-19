@@ -1,6 +1,7 @@
 import { _decorator, Component, find, JsonAsset, Node } from 'cc';
 import { UIControl } from './UIControl';
 import { EnemyLayer } from './EnemyLayer';
+import { BulletLayer } from './BulletLayer';
 const { ccclass, property } = _decorator;
 
 @ccclass('Game')
@@ -23,6 +24,8 @@ export class Game extends Component {
         let monsterDt = this.levelDt.json[this.theme - 1].monsterid[this.level - 1];
         let waveDt = this.levelDt.json[this.theme - 1].wavemonstercount[this.level - 1];
         this.node.getChildByName('EnemyLayer').getComponent(EnemyLayer).init(monsterDt, waveDt);
+
+        this.node.getChildByName('BulletLayer').getComponent(BulletLayer).initBulletPool(weaponDt, weaponDt.length);
     }
 
     update(deltaTime: number) {

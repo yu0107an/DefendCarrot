@@ -18,7 +18,7 @@ export class TowerLayer extends Component {
     {
         let tower = instantiate(this.TowerPrefab[data.weaponID - 1001]);
         tower.name = data.icon.split('.', 1)[0];
-        tower.addComponent(Tower).init(data);
+        tower.getComponent(Tower).init(data);
         this.node.addChild(tower);
         tower.setPosition(v3(pos.x - 480, pos.y - 320));
     }

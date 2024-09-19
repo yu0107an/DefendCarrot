@@ -19,7 +19,18 @@
       }
     ],
     "_exoticAnimation": null,
-    "_events": [],
+    "_events": [
+      {
+        "frame": 0.31666666666666665,
+        "func": "",
+        "params": []
+      },
+      {
+        "frame": 0.31666666666666665,
+        "func": "shot",
+        "params": []
+      }
+    ],
     "_embeddedPlayers": [],
     "_additiveSettings": {
       "__id__": 6
