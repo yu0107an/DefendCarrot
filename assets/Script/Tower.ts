@@ -1,6 +1,6 @@
-import { _decorator, Component, find, Node, v2, Animation } from 'cc';
-import { UIControl } from './UIControl';
+import { _decorator, Component, find, Node, v2, Animation, v3 } from 'cc';
 import { BulletLayer } from './BulletLayer';
+import { Map } from './Map';
 const { ccclass, property } = _decorator;
 
 @ccclass('Tower')
@@ -58,7 +58,7 @@ export class Tower extends Component {
             upgradePrice = this.createPrice[this.level].toString();
         }
         let sellPrice = this.sellPrice[this.level - 1].toString();
-        find('Canvas/UI').getComponent(UIControl).drawTowerInfo(radius, pos, upgradePrice, sellPrice, this.upgradeOrSell.bind(this));
+        find('Canvas/Map').getComponent(Map).drawTowerInfo(radius, pos, upgradePrice, sellPrice, this.upgradeOrSell.bind(this));
     }
 
     changeAttackTarget(isAdd: boolean, target: Node)
@@ -84,18 +84,28 @@ export class Tower extends Component {
         this.curState = state;
         if (this.curState === 'idle')
         {
-            this.node.children[this.level - 1].getComponent(Animation).stop();
+            let animation = this.node.children[this.level - 1].getComponent(Animation);
+            let state = animation.getState(this.node.children[this.level - 1].name);
+            if (state)
+            {
+                state.time = 0;
+                state.sample();
+            }
+            animation.stop();
         }
         else if(this.curState === 'shot')
         {
-            this.node.children[this.level - 1].getComponent(Animation).stop();
             this.node.children[this.level - 1].getComponent(Animation).play();
         }
     }
 
     shot()
     {
-        find('Canvas/Game/BulletLayer').getComponent(BulletLayer).addBullet(this.id, this.level, this.node.position, this.curAttackTarget, this.node.children[this.level - 1].angle);
+        let x = this.node.position.x + this.node.children[this.level - 1].position.x;
+        let y = this.node.position.y + this.node.children[this.level - 1].position.y;
+        let pos = v3(x, y);
+        let angle = this.node.children[this.level - 1].angle;
+        find('Canvas/Game/BulletLayer').getComponent(BulletLayer).addBullet(this.id, this.level, pos, this.curAttackTarget, angle);
     }
 
     update(deltaTime: number) {
