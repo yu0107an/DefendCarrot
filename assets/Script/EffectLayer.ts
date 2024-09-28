@@ -1,4 +1,4 @@
-import { _decorator, Animation, Component, instantiate, NodePool, Prefab, v3, Vec2 } from 'cc';
+import { _decorator, Node, Component, instantiate, NodePool, Prefab, v3, Vec2, find } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('EffectLayer')
@@ -6,20 +6,25 @@ export class EffectLayer extends Component {
 
     @property([Prefab])
     effects: Prefab[] = new Array<Prefab>();
-    effectPool: NodePool;
+    effectPools: Map<string, NodePool> = new Map<string, NodePool>();
 
     start() {
-        this.effectPool = new NodePool('Effect');
-        for (let i = 0; i < 30; i++)
+        for (let i = 0; i < this.effects.length; i++)
         {
-            let effect = instantiate(this.effects[0]);
-            this.effectPool.put(effect);
+            this.effectPools.set(this.effects[i].name, new NodePool('Effect'));
+            let nodePool = this.effectPools.get(this.effects[i].name);
+            for (let j = 0; j < 30; j++)
+            {
+                let effect = instantiate(this.effects[i]);
+                nodePool.put(effect);
+            }
         }
     }
 
-    createEffect(pos: Vec2)
+    createEffect(pos: Vec2, name: string, followTarget?: Node)
     {
-        let effect = this.effectPool.get();
+        let nodePool = this.effectPools.get(name);
+        let effect = nodePool.get(followTarget);
         this.node.addChild(effect);
         effect.setPosition(v3(pos.x, pos.y));
     }

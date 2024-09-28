@@ -1,4 +1,4 @@
-import { _decorator, Component, JsonAsset, Node, Size, tween, UITransform, v3, Vec2, Vec3 } from 'cc';
+import { _decorator, Component, JsonAsset, Node, Size, SpriteAtlas, tween, UITransform, v3, Vec2, Vec3 } from 'cc';
 import { Card } from './Card';
 const { ccclass, property } = _decorator;
 

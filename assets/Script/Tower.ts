@@ -1,10 +1,10 @@
 import { _decorator, Component, find, Node, v2, Animation, v3 } from 'cc';
 import { BulletLayer } from './BulletLayer';
-import { Map } from './Map';
+import { EventManager, IObserverType } from './EventManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Tower')
-export class Tower extends Component {
+export class Tower extends Component implements IObserver {
 
     id: number;
     level: number = 1;
@@ -14,13 +14,16 @@ export class Tower extends Component {
     attackRange: number[];
     attackTarget: Node[] = new Array<Node>();
     curAttackTarget: Node;
+    attackPoint: Node;
     curState: string = 'idle';
+    isPause: boolean;
+    eventIndex: number = 0;
 
     start() {
         this.node.on(Node.EventType.TOUCH_END, this.click, this);
     }
 
-    init(data: any)
+    init(data: any, isPaused: boolean)
     {
         this.id = data.weaponID;
         this.createPrice = data.createprice;
@@ -28,6 +31,9 @@ export class Tower extends Component {
         this.shootSpeed = data.shootSpeed;
         this.attackRange = data.attackrange;
         this.node.children[this.level - 1].active = true;
+        this.isPause = isPaused;
+        EventManager.Instance.changeCoin(-this.createPrice[this.level - 1]);
+        EventManager.Instance.addObserver(this, IObserverType.GameState);
     }
 
     upgradeOrSell(type: string)
@@ -35,11 +41,14 @@ export class Tower extends Component {
         if (type === 'upgrade')
         {
             this.node.children[this.level - 1].active = false;
+            EventManager.Instance.changeCoin(-this.createPrice[this.level]);
             this.level += 1;
             this.node.children[this.level - 1].active = true;
+
         }
         else if (type === 'sell')
         {
+            EventManager.Instance.changeCoin(this.sellPrice[this.level - 1]);
             this.node.destroy();
         }
     }
@@ -58,21 +67,48 @@ export class Tower extends Component {
             upgradePrice = this.createPrice[this.level].toString();
         }
         let sellPrice = this.sellPrice[this.level - 1].toString();
-        find('Canvas/Map').getComponent(Map).drawTowerInfo(radius, pos, upgradePrice, sellPrice, this.upgradeOrSell.bind(this));
+        EventManager.Instance.drawTowerRangeAndInfo(radius, pos, upgradePrice, sellPrice, this.upgradeOrSell.bind(this));
     }
 
-    changeAttackTarget(isAdd: boolean, target: Node)
+    changeAttackNumber(isAdd: boolean, target?: Node)
     {
         if (isAdd)
         {
             this.attackTarget.push(target);
+            if (target === EventManager.Instance.getAttackPoint())
+            {
+                this.attackPoint = target;
+                this.curAttackTarget = target;
+            }
         }
         else
         {
+            if (this.attackTarget[0] === EventManager.Instance.getAttackPoint())
+            {
+                this.attackPoint = null;
+            }
             this.attackTarget.shift();
             this.changeState('idle');
         }
-        this.curAttackTarget = this.attackTarget[0];
+
+        if (!this.attackPoint)
+        {
+            this.curAttackTarget = this.attackTarget[0];
+        }
+    }
+
+    changeAttackPoint(target: Node)
+    {
+        let index = this.attackTarget.findIndex(value => value === target)
+        if (index !== -1)
+        {
+            this.attackPoint = target;
+            this.curAttackTarget = this.attackPoint;
+        }
+        else
+        {
+            this.attackPoint = null;
+        }
     }
 
     changeState(state: string)
@@ -108,11 +144,22 @@ export class Tower extends Component {
         find('Canvas/Game/BulletLayer').getComponent(BulletLayer).addBullet(this.id, this.level, pos, this.curAttackTarget, angle);
     }
 
+    gameStateChanged(isPaused: boolean)
+    {
+        this.isPause = isPaused;
+        this.changeState('idle');
+    }
+
     update(deltaTime: number) {
-        if (this.curAttackTarget !== undefined)
+        if (this.isPause || this.attackTarget.length === 0)
         {
-            let dx = this.attackTarget[0].position.x - this.node.position.x;
-            let dy = this.attackTarget[0].position.y - this.node.position.y;
+            return;
+        }
+
+        if (this.curAttackTarget.parent)
+        {
+            let dx = this.curAttackTarget.position.x - this.node.position.x;
+            let dy = this.curAttackTarget.position.y - this.node.position.y;
             let dir = v2(dx, dy).normalize();
             let rotation = Math.atan2(dir.y, dir.x) * (180 / Math.PI) - 90;
             this.node.children[this.level - 1].angle = this.lerpAngle(this.node.children[this.level - 1].angle, rotation, 0.15);
@@ -121,6 +168,18 @@ export class Tower extends Component {
             {
                 this.changeState('shot');
             }
+        }
+        else
+        {
+            if (this.attackPoint)
+            {
+                this.attackPoint = null;
+            }
+            else
+            {
+                this.changeAttackNumber(false);
+            }
+            
         }
     }
 
@@ -133,6 +192,7 @@ export class Tower extends Component {
 
     protected onDestroy(): void {
         this.node.off(Node.EventType.TOUCH_END);
+        EventManager.Instance.delObserver(this, IObserverType.GameState);
     }
 }
 

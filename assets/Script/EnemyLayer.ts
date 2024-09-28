@@ -1,15 +1,13 @@
-import { _decorator, Component, instantiate, JsonAsset, Node, NodePool, Prefab, v3 } from 'cc';
+import { _decorator, Component, instantiate, JsonAsset, Node, NodePool, Prefab, v2 } from 'cc';
 import { Enemy } from './Enemy';
-import { AStar, struct } from './AStar';
-import { Map } from './Map';
+import { struct } from './AStar';
+import { EventManager, IObserverType } from './EventManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('EnemyLayer')
-export class EnemyLayer extends Component {
+export class EnemyLayer extends Component implements IObserver {
 
     enemyPool: NodePool;
-    @property(Map)
-    mapTs: Map;
     @property(JsonAsset)
     monsterDt: JsonAsset;
     @property([Prefab])
@@ -18,10 +16,8 @@ export class EnemyLayer extends Component {
     monsterId: any;
     waveDt: any;
     path: Array<struct>;
-
-    onLoad() {
-        this.enemyPool = new NodePool('Enemy');
-    }
+    enemyCount: number = 0;
+    eventIndex: number = 0;
 
     start() {
         
@@ -29,10 +25,10 @@ export class EnemyLayer extends Component {
 
     init(monsterId: any, waveDt: any)
     {
+        this.enemyPool = new NodePool('Enemy');
         let start: struct = { x: 1, y: 6 };
         let end: struct = { x: 10, y: 6 };
-        this.path = AStar.FindPath_4Dir(start, end, this.mapTs.map, 1);
-        
+        this.path = EventManager.Instance.findPath_AStar(start, end, 1);
         this.enemyPrefab.forEach((value,index) => {
             for (let i = 0; i < 8; i++)
             {
@@ -44,30 +40,50 @@ export class EnemyLayer extends Component {
         })
         this.monsterId = monsterId;
         this.waveDt = waveDt;
-        this.scheduleOnce(this.createEnemy, 3.0);
+        this.createEnemy();
     }
 
     createEnemy()
     {
-        let enemyCount = this.waveDt[this.curWave - 1];
-        this.schedule(this.createEnemyTimer, 1, enemyCount - 1, 0);
+        let totalEnemies = this.waveDt[this.curWave - 1];
+        this.enemyCount = 0;
+        EventManager.Instance.addObserver(this, IObserverType.GameState);
+        this.schedule(this.createEnemyTimer, 0.8, totalEnemies - this.enemyCount - 1, 3.0);
     }
 
     createEnemyTimer()
     {
-        let newEnemy = this.enemyPool.get(this.path);
+        let newEnemy = this.enemyPool.get(this.path, v2(-360, 120));
         if (newEnemy === null)
         {
             let monsterId = this.monsterId[Math.floor(Math.random() * this.monsterId.length)];
             newEnemy = instantiate(this.enemyPrefab[monsterId]);
         }
         this.node.addChild(newEnemy);
-        newEnemy.setPosition(v3(-360, 120));
+        EventManager.Instance.createEffect(v2(-360, 120), 'Appear', newEnemy);
+        this.enemyCount += 1;
     }
 
-    update(deltaTime: number) {
-        
+    gameStateChanged(isPaused: boolean)
+    {
+        if (isPaused)
+        {
+            this.pauseCreateEnemy();
+        }
+        else
+        {
+            this.resumeCreateEnemy();    
+        }
+    }
+
+    pauseCreateEnemy()
+    {
+        this.unschedule(this.createEnemyTimer);
+    }
+
+    resumeCreateEnemy()
+    {
+        let totalEnemies = this.waveDt[this.curWave - 1];
+        this.schedule(this.createEnemyTimer, 0.8, totalEnemies - this.enemyCount - 1, 0);
     }
 }
-
-

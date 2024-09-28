@@ -43,6 +43,13 @@ export class BulletLayer extends Component {
         bullet.setPosition(v3(pos.x, pos.y + 10));
     }
 
+    recycleBullet(bullet: Node)
+    {
+        let bulletId = bullet.getComponent(Bullet).id;
+        let bulletPool = this.bulletPools.get(bulletId);
+        bulletPool.put(bullet);
+    }
+
     update(deltaTime: number) {
         
     }

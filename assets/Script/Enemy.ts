@@ -1,28 +1,30 @@
-import { _decorator, Collider2D, Component, Contact2DType, find, IPhysics2DContact, ProgressBar, tween, v2, Vec3 } from 'cc';
+import { _decorator, Collider2D, Component, Node, Contact2DType, IPhysics2DContact, ProgressBar, tween, v2, v3, Vec3 } from 'cc';
 import { Tower } from './Tower';
-import { BulletLayer } from './BulletLayer';
 import { Bullet } from './Bullet';
 import { EnemyLayer } from './EnemyLayer';
-import { EffectLayer } from './EffectLayer';
+import { struct } from './AStar';
+import { EventManager, IObserverType } from './EventManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Enemy')
-export class Enemy extends Component {
+export class Enemy extends Component implements IObserver {
 
     id: number;
     maxHp: number;
     curHp: number;
-    moveSpeed: number = 0;
+    moveSpeed: number;
     reward: number;
-    curPath: number = 1;
+    curPath: number;
     hpBar: ProgressBar;
-    curMove: any;
+    curMove: any;//当前的tween缓动
+    path: Array<struct>;
+    eventIndex: number = 0;
 
     start() {
 
     }
 
-    reuse(path: any)
+    reuse(data: any)
     {
         let collider = this.getComponent(Collider2D);
         if (collider)
@@ -34,7 +36,11 @@ export class Enemy extends Component {
         this.hpBar.progress = 1;
         this.curPath = 1;
         this.node.children[0].active = false;
-        this.onMove(path);
+        this.node.setPosition(v3(data[1].x, data[1].y));
+        this.path = data[0];
+        this.onMove();
+        EventManager.Instance.addObserver(this, IObserverType.GameState);
+        this.node.on(Node.EventType.TOUCH_END, this.click, this);
     }
 
     unuse()
@@ -45,7 +51,11 @@ export class Enemy extends Component {
             collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
             collider.off(Contact2DType.END_CONTACT, this.onEndContact, this);
         }
-        
+        EventManager.Instance.delObserver(this, IObserverType.GameState);
+        if (this.node === EventManager.Instance.getAttackPoint())
+        {
+            EventManager.Instance.cancelAttackPoint();
+        }
     }
 
     init(data: any)
@@ -58,19 +68,31 @@ export class Enemy extends Component {
         this.hpBar = this.node.children[0].children[0].getComponent(ProgressBar);
     }
 
+    click()
+    {
+        if (this.node === EventManager.Instance.getAttackPoint())
+        {
+            EventManager.Instance.cancelAttackPoint();
+        }
+        else
+        {
+            EventManager.Instance.confirmAttackPoint(this.node);
+        }
+        
+    }
+
     onBeginContact(self: Collider2D, other: Collider2D, contact: IPhysics2DContact)
     {
         if (other.group === 2)
         {
-            other.node.parent.getComponent(Tower).changeAttackTarget(true, self.node);
+            other.node.parent.getComponent(Tower).changeAttackNumber(true, self.node);
+            
         }
         else if (other.group === 8)
         {
-            let bulletTs = other.node.parent.getComponent(Bullet);
-            let bulletLayerTs = find('Canvas/Game/BulletLayer').getComponent(BulletLayer);
-            let bulletPool = bulletLayerTs.bulletPools.get(bulletTs.id);
-            bulletPool.put(other.node.parent);
-            this.reduceHp(bulletTs.atk);
+            EventManager.Instance.recycleBullet(other.node.parent);
+            let bulletAtk = other.node.parent.getComponent(Bullet).atk;
+            this.reduceHp(bulletAtk);
         }
     }
 
@@ -78,7 +100,19 @@ export class Enemy extends Component {
     {
         if (other.group === 2)
         {
-            other.node.parent.getComponent(Tower).changeAttackTarget(false, self.node);
+            other.node.parent.getComponent(Tower).changeAttackNumber(false);
+        }
+    }
+
+    gameStateChanged(isPaused: boolean)
+    {
+        if (isPaused)
+        {
+            this.curMove.stop();
+        }
+        else
+        {
+            this.onMove();
         }
     }
 
@@ -91,7 +125,7 @@ export class Enemy extends Component {
         this.curHp -= atk;
         if (this.curHp <= 0)
         {
-            find('Canvas/EffectLayer').getComponent(EffectLayer).createEffect(v2(this.node.position.x, this.node.position.y));
+            EventManager.Instance.createEffect(v2(this.node.position.x, this.node.position.y), 'Air');
             this.curMove.stop();
             let enemyPool = this.node.parent.getComponent(EnemyLayer).enemyPool;
             enemyPool.put(this.node);
@@ -100,20 +134,23 @@ export class Enemy extends Component {
         this.hpBar.progress = percent;
     }
 
-    onMove(path: any)
+    onMove()
     {
         if (this.curHp <= 0)
         {
             return;
         }
-        let time = 80 / this.moveSpeed;
+        let targetX = this.path[this.curPath].x * 80 + 40 - 480;
+        let targetY = this.path[this.curPath].y * 80 + 40 - 320;
+        let distance = Math.abs(targetX - this.node.position.x) + Math.abs(targetY - this.node.position.y);
+        let time = distance / this.moveSpeed;
         this.curMove = tween(this.node)
-            .to(time, { position: new Vec3(path[0][this.curPath].x * 80 + 40 - 480, path[0][this.curPath].y * 80 + 40 - 320) })
+            .to(time, { position: new Vec3(targetX, targetY) })
             .call(() => { 
                 this.curPath += 1;
-                if (this.curPath !== path[0].length - 1)
+                if (this.curPath !== this.path.length - 1)
                 {
-                    this.onMove(path);
+                    this.onMove();
                 }
             })
             .start();
@@ -123,5 +160,3 @@ export class Enemy extends Component {
         
     }
 }
-
-

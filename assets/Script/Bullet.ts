@@ -1,9 +1,10 @@
 import { _decorator, Component, Node, v2, v3, Vec2, view } from 'cc';
 import { BulletLayer } from './BulletLayer';
+import { EventManager, IObserverType } from './EventManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Bullet')
-export class Bullet extends Component {
+export class Bullet extends Component implements IObserver {
 
     target: Node;
     atk: number;
@@ -12,8 +13,10 @@ export class Bullet extends Component {
     nAck: number;
     bRotate: number;
     speedBuff: number;
-    direction: Vec2 = Vec2.ZERO;
+    direction: Vec2;
     isLoseTarget: boolean = false;
+    isPaused: boolean;
+    eventIndex: number = 0;
 
     start() {
 
@@ -22,6 +25,7 @@ export class Bullet extends Component {
     unuse()
     {
         this.node.children[this.curLevel - 1].active = false;
+        EventManager.Instance.delObserver(this, IObserverType.GameState);
     }
 
     reuse(data: any)
@@ -31,6 +35,7 @@ export class Bullet extends Component {
         this.atk = Math.floor(this.nAck / Math.abs(this.curLevel - 4)) + 1;
         this.node.children[this.curLevel - 1].active = true;
         this.isLoseTarget = false;
+        EventManager.Instance.addObserver(this, IObserverType.GameState);
     }
 
     init(data: any)
@@ -41,10 +46,19 @@ export class Bullet extends Component {
         this.speedBuff = data.speedbuff;
     }
 
+    gameStateChanged(isPaused: boolean)
+    {
+        this.isPaused = isPaused;
+    }
+
     update(deltaTime: number) {
+        if (this.isPaused)
+        {
+            return;
+        }
         if (!this.isLoseTarget)
         {
-            if (this.target.parent)
+            if (this.target)
             {
                 let dx = this.target.position.x - this.node.position.x;
                 let dy = this.target.position.y - this.node.position.y;

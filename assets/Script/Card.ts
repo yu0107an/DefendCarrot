@@ -1,8 +1,6 @@
 import { _decorator, Component, find, Node, resources, Sprite, SpriteAtlas, SpriteFrame, v2} from 'cc';
-import { TowerLayer } from './TowerLayer';
 import { ChoiceCard } from './ChoiceCard';
-import { Map } from './Map';
-import { EffectLayer } from './EffectLayer';
+import { EventManager } from './EventManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Card')
@@ -31,17 +29,13 @@ export class Card extends Component {
         let pos = this.node.parent.getComponent(ChoiceCard).curPos;
         let x = Math.floor(pos.x / 80);
         let y = Math.floor(pos.y / 80);
-        find('Canvas/Map').getComponent(Map).map[x][y] = 4;
-        find('Canvas/Game/TowerLayer').getComponent(TowerLayer).createTower(this.data, pos);
-        this.node.parent.active = false;
-        find('Canvas/UI1/Select').active = false;
+        EventManager.Instance.changeMapValue(x, y, 4);
+        EventManager.Instance.createTower(this.data, pos);
+        EventManager.Instance.disableSelect();
         event.propagationStopped = true;
-        find('Canvas/EffectLayer').getComponent(EffectLayer).createEffect(v2(pos.x - 480, pos.y - 320));
+        EventManager.Instance.createEffect(v2(pos.x - 480, pos.y - 320), 'Air');
     }
 
-    update(deltaTime: number) {
-        
-    }
 }
 
 
