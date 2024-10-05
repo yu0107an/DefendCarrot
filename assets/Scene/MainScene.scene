@@ -2506,7 +2506,7 @@
   {
     "__type__": "cc.ClickEvent",
     "target": {
-      "__id__": 54
+      "__id__": 49
     },
     "component": "",
     "_componentId": "774a7vAmiZIZYK5KnyE5exl",
@@ -2694,7 +2694,7 @@
   {
     "__type__": "cc.ClickEvent",
     "target": {
-      "__id__": 54
+      "__id__": 49
     },
     "component": "",
     "_componentId": "774a7vAmiZIZYK5KnyE5exl",

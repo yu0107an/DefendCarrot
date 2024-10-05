@@ -18,7 +18,7 @@ export class AStar
 
         start.g = 0;
         open.push(start);
-        while (open.length != 0)
+        while (open.length !== 0)
         {
             open.sort((a, b) => (a.g + a.h) - (b.g + b.h));
             let curNode = open[0];

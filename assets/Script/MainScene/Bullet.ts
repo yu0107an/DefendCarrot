@@ -58,7 +58,7 @@ export class Bullet extends Component implements IObserver {
         }
         if (!this.isLoseTarget)
         {
-            if (this.target)
+            if (this.target.parent)
             {
                 let dx = this.target.position.x - this.node.position.x;
                 let dy = this.target.position.y - this.node.position.y;

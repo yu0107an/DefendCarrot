@@ -72,6 +72,7 @@ export class UIControl extends Component implements IObserver {
         let speed = this.node.getChildByName('UP').getChildByName('Speed');
         speed.children[curSpeed - 1].active = false;
         speed.children[targetSpeed - 1].active = true;
+        EventManager.Instance.setGameSpeed(targetSpeed);
     }
 
     drawTowerInfo(pos: Vec2, upgradePrice: string, sellPrice: string, func: any)

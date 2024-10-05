@@ -19,6 +19,7 @@ export enum IObserverType
 @ccclass('EventManager')
 export class EventManager {
     
+    private static instance: EventManager;
     eventIndex: number = 1;
     private gameTs: Game;
     private UI1Ts: UI1;
@@ -26,7 +27,6 @@ export class EventManager {
     private effectLayerTs: EffectLayer;
     private towerLayerTs: TowerLayer;
     private bulletLayerTs: BulletLayer;
-    private static instance: EventManager;
 
     private constructor() { };
 
@@ -170,6 +170,11 @@ export class EventManager {
     changeCoin(count: number)
     {
         this.gameTs.gameCoinChanged(count);
+    }
+
+    setGameSpeed(speed: number)
+    {
+        this.gameTs.setGameSpeed(speed);
     }
 
 }
