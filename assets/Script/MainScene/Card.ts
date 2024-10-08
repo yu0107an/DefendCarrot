@@ -36,6 +36,10 @@ export class Card extends Component {
         EventManager.Instance.createEffect(v2(pos.x - 480, pos.y - 320), 'Air');
     }
 
+    protected onDestroy(): void {
+        this.node.off(Node.EventType.TOUCH_END);
+    }
+
 }
 
 

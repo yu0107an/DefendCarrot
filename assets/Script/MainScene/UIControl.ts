@@ -1,7 +1,8 @@
-import { _decorator, Component, Node, Event, Label, SpriteAtlas, Sprite, v3, Vec2, Prefab, instantiate, v2 } from 'cc';
+import { _decorator, Component, Node, Event, Label, SpriteAtlas, Sprite, v3, Vec2, Prefab, instantiate, v2, Button, director } from 'cc';
 import { EventManager, IObserverType } from './EventManager';
 import { ChoiceCard } from './ChoiceCard';
 import { AttackPoint } from './AttackPoint';
+import { GameInfo } from '../GameInfo';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIControl')
@@ -29,14 +30,40 @@ export class UIControl extends Component implements IObserver {
 
     start() {
         this.choiceCard = this.node.getChildByName('ChoiceCard');
+        this.disableAllButton();
     }
     
+    disableAllButton()
+    {
+        this.node.getComponentsInChildren(Button).forEach((value) => {
+            value.interactable = false;
+        })
+    }
+
+    enableAllButton()
+    {
+        this.node.getComponentsInChildren(Button).forEach((value) => {
+            value.interactable = true;
+        })
+    }
+
+    showGameOver()
+    {
+        let gameOverNode = this.node.getChildByName('GameOver');
+        gameOverNode.active = true;
+        let curWave = this.node.getChildByPath('UP/CurWave').getComponent(Label).string;
+        let allWave = this.node.getChildByPath('UP/AllWave').getComponent(Label).string;
+        gameOverNode.getChildByName('CurWave').getComponent(Label).string = curWave;
+        gameOverNode.getChildByName('AllWave').getComponent(Label).string = allWave;
+        gameOverNode.getChildByName('CurLevel').getComponent(Label).string = GameInfo.level.toString();
+    }
+
     changeMenuButton(event: Event)
     {
-        let menuNode = this.node.getChildByName('UP').getChildByName('Menu').getChildByName('MenuPage');
+        let menuNode = this.node.getChildByPath('UP/Menu/MenuPage');
         menuNode.active = !menuNode.active;
         this.isMenuOpen = !this.isMenuOpen;
-        let prePauseState = !this.node.getChildByName('UP').getChildByName('PauseButton').children[0].active;
+        let prePauseState = !this.node.getChildByPath('UP/PauseButton').children[0].active;
         if (event.target.name === 'MenuButton')
         {
             EventManager.Instance.pauseGame(this.isMenuOpen);
@@ -53,7 +80,7 @@ export class UIControl extends Component implements IObserver {
         {
             return;
         }
-        let pauseButton = this.node.getChildByName('UP').getChildByName('PauseButton');
+        let pauseButton = this.node.getChildByPath('UP/PauseButton');
         pauseButton.children.forEach((value, index) => {
             value.active = !value.active;
             if (index === 0)
@@ -69,7 +96,7 @@ export class UIControl extends Component implements IObserver {
         let string = data.split(',', 2);
         let curSpeed = Number(string[0]);
         let targetSpeed = Number(string[1]);
-        let speed = this.node.getChildByName('UP').getChildByName('Speed');
+        let speed = this.node.getChildByPath('UP/Speed');
         speed.children[curSpeed - 1].active = false;
         speed.children[targetSpeed - 1].active = true;
         EventManager.Instance.setGameSpeed(targetSpeed);
@@ -213,6 +240,13 @@ export class UIControl extends Component implements IObserver {
         this.coin.getComponent(Label).string = coinNumber.toString();
     }
 
+    protected onDestroy(): void {
+        if (this.upgradeNode && this.sellNode)
+        {
+            this.upgradeNode.off(Node.EventType.TOUCH_END);
+            this.sellNode.off(Node.EventType.TOUCH_END);
+        }
+    }
     
 }
 

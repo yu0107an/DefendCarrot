@@ -40,7 +40,6 @@ export class EnemyLayer extends Component implements IObserver {
         })
         this.monsterId = monsterId;
         this.waveDt = waveDt;
-        this.createEnemy();
     }
 
     createEnemy()
@@ -48,7 +47,7 @@ export class EnemyLayer extends Component implements IObserver {
         let totalEnemies = this.waveDt[this.curWave - 1];
         this.enemyCount = 0;
         EventManager.Instance.addObserver(this, IObserverType.GameState);
-        this.schedule(this.createEnemyTimer, 0.8, totalEnemies - this.enemyCount - 1, 3.0);
+        this.schedule(this.createEnemyTimer, 0.8, totalEnemies - this.enemyCount - 1, 2);
     }
 
     createEnemyTimer()

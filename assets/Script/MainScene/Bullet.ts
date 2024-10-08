@@ -35,6 +35,7 @@ export class Bullet extends Component implements IObserver {
         this.atk = Math.floor(this.nAck / Math.abs(this.curLevel - 4)) + 1;
         this.node.children[this.curLevel - 1].active = true;
         this.isLoseTarget = false;
+        this.eventIndex = 0;
         EventManager.Instance.addObserver(this, IObserverType.GameState);
     }
 

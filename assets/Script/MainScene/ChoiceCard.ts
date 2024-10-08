@@ -39,13 +39,13 @@ export class ChoiceCard extends Component {
         {
             x = 960 - width / 2;
         }
-        if (y + height / 2 >= 640)
+        if (y + height / 2 >= 560)
         {
-            y = 640 - height / 2 - 160;
+            y = 560 - height / 2 - 160;
         }
         this.node.setPosition(v3(x - 480, y - 320 + 80));
         this.curPos = pos;
-        this.node.children.forEach((value, index) => {
+        this.node.children.forEach((value) => {
             value.scale = new Vec3(0, 0, 0);
             tween(value)
                 .to(0.3, { scale: new Vec3(1, 1, 1) })

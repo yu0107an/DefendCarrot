@@ -1,4 +1,4 @@
-import { _decorator, find, Node, Vec2 } from 'cc';
+import { _decorator, director, find, Node, Vec2 } from 'cc';
 import { Game } from './Game';
 import { EffectLayer } from './EffectLayer';
 import { UI1 } from './UI1';
@@ -8,6 +8,8 @@ import { ChoiceCard } from './ChoiceCard';
 import { TowerLayer } from './TowerLayer';
 import { AStar, struct } from './AStar';
 import { BulletLayer } from './BulletLayer';
+import { EnemyLayer } from './EnemyLayer';
+import { Carrot } from './Carrot';
 const { ccclass, property } = _decorator;
 
 export enum IObserverType
@@ -20,25 +22,17 @@ export enum IObserverType
 export class EventManager {
     
     private static instance: EventManager;
-    eventIndex: number = 1;
     private gameTs: Game;
     private UI1Ts: UI1;
     private UI2Ts: UIControl;
+    private enemyLayerTs: EnemyLayer;
     private effectLayerTs: EffectLayer;
     private towerLayerTs: TowerLayer;
     private bulletLayerTs: BulletLayer;
+    private carrotTs: Carrot;
+    eventIndex: number = 1;
 
     private constructor() { };
-
-    init()
-    {
-        this.gameTs = find('Canvas/Game').getComponent(Game);
-        this.UI1Ts = find('Canvas/UI1').getComponent(UI1);
-        this.UI2Ts = find('Canvas/UI2').getComponent(UIControl);
-        this.effectLayerTs = find('Canvas/EffectLayer').getComponent(EffectLayer);
-        this.towerLayerTs = find('Canvas/Game/TowerLayer').getComponent(TowerLayer);
-        this.bulletLayerTs = find('Canvas/Game/BulletLayer').getComponent(BulletLayer);
-    }
 
     static get Instance()
     {
@@ -50,8 +44,26 @@ export class EventManager {
         return this.instance;
     }
 
+    static resetInstance()
+    {
+        this.instance = null;
+    }
+
+    init()
+    {
+        this.gameTs = find('Canvas/Game').getComponent(Game);
+        this.UI1Ts = find('Canvas/UI1').getComponent(UI1);
+        this.UI2Ts = find('Canvas/UI2').getComponent(UIControl);
+        this.enemyLayerTs = find('Canvas/Game/EnemyLayer').getComponent(EnemyLayer);
+        this.effectLayerTs = find('Canvas/EffectLayer').getComponent(EffectLayer);
+        this.towerLayerTs = find('Canvas/Game/TowerLayer').getComponent(TowerLayer);
+        this.bulletLayerTs = find('Canvas/Game/BulletLayer').getComponent(BulletLayer);
+        this.carrotTs = find('Canvas/Game/Carrot').getComponent(Carrot);
+    }
+
     addObserver(demander: any, ObserverType: IObserverType)
     {
+        
         switch (ObserverType)
         {
             case IObserverType.GameState:
@@ -88,6 +100,19 @@ export class EventManager {
         demander.eventIndex = 0;
     }
 
+    clearAllObserver()
+    {
+        this.gameTs.gameState_Observers.forEach((value) => {
+            value.eventIndex = 0;
+        });
+        this.gameTs.gameCoin_Observers.forEach((value) => {
+            value.eventIndex = 0;
+        })
+        this.gameTs.gameState_Observers.length = 0;
+        this.gameTs.gameCoin_Observers.length = 0;
+        this.eventIndex = 1;
+    }
+
     initLevelCard(data: any)
     {
         find('Canvas/UI2/ChoiceCard').getComponent(ChoiceCard).initAllCard(data);
@@ -112,17 +137,33 @@ export class EventManager {
 
     clickScreen(x: number, y: number)
     {
-        this.UI2Ts.getComponent(UIControl).clickScreen(x, y);
+        this.UI2Ts.clickScreen(x, y);
     }
 
     createForbiddenNode(pos: Vec2)
     {
-        this.UI1Ts.getComponent(UI1).createForbiddenNode(pos);
+        this.UI1Ts.createForbiddenNode(pos);
     }
 
     changeMapValue(x: number, y: number, value: number)
     {
         find('Canvas/Map').getComponent(Map).map[x][y] = value;
+    }
+
+    enableClick()
+    {
+        find('Canvas/Map').getComponent(Map).enableClick();
+        find('Canvas/Game/Carrot').getComponent(Carrot).enableClick();
+    }
+
+    enableUIButton()
+    {
+        this.UI2Ts.enableAllButton();
+    }
+
+    createEnemy()
+    {
+        this.enemyLayerTs.createEnemy();
     }
 
     createTower(data: any, pos: Vec2)
@@ -157,6 +198,17 @@ export class EventManager {
         return this.UI2Ts.getAttackPoint();
     }
 
+    reduceHp_Carrot(count: number)
+    {
+        this.carrotTs.reduceHp(count);
+    }
+
+    gameOver()
+    {
+        this.UI2Ts.showGameOver();
+        director.pause();
+    }
+
     findPath_AStar(start: struct, end: struct, pathNumber: number): struct[]
     {
         return AStar.FindPath_4Dir(start, end, find('Canvas/Map').getComponent(Map).map, pathNumber);
@@ -178,5 +230,3 @@ export class EventManager {
     }
 
 }
-
-

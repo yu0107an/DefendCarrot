@@ -1,6 +1,6 @@
 export class GameInfo{
-    static theme: number;
-    static level: number;
+    static theme: number = 1;
+    static level: number = 1;
 }
 
 

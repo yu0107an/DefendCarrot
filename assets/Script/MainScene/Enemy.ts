@@ -38,6 +38,7 @@ export class Enemy extends Component implements IObserver {
         this.node.children[0].active = false;
         this.node.setPosition(v3(data[1].x, data[1].y));
         this.path = data[0];
+        this.eventIndex = 0;
         this.onMove();
         EventManager.Instance.addObserver(this, IObserverType.GameState);
         this.node.on(Node.EventType.TOUCH_END, this.click, this);
@@ -83,16 +84,22 @@ export class Enemy extends Component implements IObserver {
 
     onBeginContact(self: Collider2D, other: Collider2D, contact: IPhysics2DContact)
     {
-        if (other.group === 2)
+        switch (other.group)
         {
-            other.node.parent.getComponent(Tower).changeAttackNumber(true, self.node);
-            
-        }
-        else if (other.group === 8)
-        {
-            EventManager.Instance.recycleBullet(other.node.parent);
-            let bulletAtk = other.node.parent.getComponent(Bullet).atk;
-            this.reduceHp(bulletAtk);
+            case 2:
+                other.node.parent.getComponent(Tower).changeAttackNumber(true, self.node);
+                break;
+            case 8:
+                EventManager.Instance.recycleBullet(other.node.parent);
+                let bulletAtk = other.node.parent.getComponent(Bullet).atk;
+                this.reduceHp(bulletAtk);
+                break;
+            case 16:
+                EventManager.Instance.reduceHp_Carrot(1);
+                this.recycleSelf();
+                break;
+            default:
+                break;
         }
     }
 
@@ -125,10 +132,9 @@ export class Enemy extends Component implements IObserver {
         this.curHp -= atk;
         if (this.curHp <= 0)
         {
-            EventManager.Instance.createEffect(v2(this.node.position.x, this.node.position.y), 'Air');
+            EventManager.Instance.changeCoin(this.reward);
             this.curMove.stop();
-            let enemyPool = this.node.parent.getComponent(EnemyLayer).enemyPool;
-            enemyPool.put(this.node);
+            this.recycleSelf();
         }
         let percent = this.curHp / this.maxHp;
         this.hpBar.progress = percent;
@@ -156,7 +162,20 @@ export class Enemy extends Component implements IObserver {
             .start();
     }
 
-    update(deltaTime: number) {
-        
+    recycleSelf()
+    {
+        EventManager.Instance.createEffect(v2(this.node.position.x, this.node.position.y), 'Air');
+        let enemyPool = this.node.parent.getComponent(EnemyLayer).enemyPool;
+        enemyPool.put(this.node);
+    }
+
+    protected onDestroy(): void {
+        this.node.off(Node.EventType.TOUCH_END);
+        let collider = this.getComponent(Collider2D);
+        if (collider)
+        {
+            collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+            collider.off(Contact2DType.END_CONTACT, this.onEndContact, this);
+        }
     }
 }

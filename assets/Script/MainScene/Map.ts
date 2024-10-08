@@ -15,7 +15,7 @@ export class Map extends Component {
         let y1 = [2, 2, 2, 2, 2, 2, 2, 2,  3, 3, 3, 3, 3, 3 , 4, 4 , 5, 5];
         for (let i = 0; i < this.map.length; i++)
         {
-            this.map[i] = new Array<number>(9).fill(3);
+            this.map[i] = new Array<number>(7).fill(3);
         }
         for (let i = 0; i < x0.length; i++)
         {
@@ -25,12 +25,22 @@ export class Map extends Component {
         {
             this.map[x1[i]][y1[i]] = 1;
         }
-        this.node.on(Node.EventType.TOUCH_END, this.click, this);
+        
     }
 
     init(data: any)
     {
         EventManager.Instance.initLevelCard(data);
+    }
+
+    enableClick()
+    {
+        this.node.on(Node.EventType.TOUCH_END, this.click, this);
+    }
+
+    disableClick()
+    {
+        this.node.off(Node.EventType.TOUCH_END, this.click, this);
     }
 
     click(event)
@@ -39,7 +49,7 @@ export class Map extends Component {
         let pos = event.getUILocation();
         let x = Math.floor(pos.x / 80);
         let y = Math.floor(pos.y / 80);
-        
+
         switch (this.map[x][y])
         {
             case 0 || 1:
@@ -54,6 +64,10 @@ export class Map extends Component {
             default:
                 break;
         }
+    }
+
+    protected onDestroy(): void {
+        this.disableClick();
     }
 
 }
