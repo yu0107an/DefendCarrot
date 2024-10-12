@@ -1,4 +1,4 @@
-import { _decorator, Component, JsonAsset, Node, Size, SpriteAtlas, tween, UITransform, v3, Vec2, Vec3 } from 'cc';
+import { _decorator, Component, JsonAsset, Node, Size, tween, UITransform, v3, Vec3 } from 'cc';
 import { Card } from './Card';
 const { ccclass, property } = _decorator;
 
@@ -7,7 +7,7 @@ export class ChoiceCard extends Component {
 
     @property(JsonAsset)
     weaponDt: JsonAsset;
-    curPos: Vec2;
+    curPos: Vec3;
 
     start() {
         
@@ -25,7 +25,7 @@ export class ChoiceCard extends Component {
         this.node.active = false;
     }
 
-    changePos(pos:Vec2)
+    changePos(pos: Vec3)
     {
         let width = this.node.getComponent(UITransform).width;
         let height = this.node.getComponent(UITransform).height;

@@ -5,18 +5,6 @@ const { ccclass, property } = _decorator;
 export class AttackPoint extends Component {
 
     target: Node;
-    start() {
-
-    }
-
-    changeTarget(target: Node)
-    {
-        if (target !== this.target)
-        {
-
-        }
-        
-    }
 
     update(deltaTime: number) {
         if (this.target)
@@ -29,6 +17,10 @@ export class AttackPoint extends Component {
             {
                 this.target = null;
             }
+        }
+        else
+        {
+            this.target = null;
         }
     }
 }

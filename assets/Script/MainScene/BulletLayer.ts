@@ -30,10 +30,10 @@ export class BulletLayer extends Component {
         }
     }
 
-    addBullet(towerId: number, towerLevel: number, pos: Vec3, target: Node, angle: number)
+    addBullet(name: string, towerId: number, towerLevel: number, pos: Vec3, target: Node, angle: number)
     {
         let bulletPool = this.bulletPools.get(towerId);
-        let bullet = bulletPool.get(towerLevel, target);
+        let bullet = bulletPool.get(name, towerLevel, target);
         if (bullet === null)
         {
             bullet = instantiate(this.bulletPrefab[towerId - 1001]);
@@ -43,16 +43,6 @@ export class BulletLayer extends Component {
         bullet.setPosition(v3(pos.x, pos.y + 10));
     }
 
-    recycleBullet(bullet: Node)
-    {
-        let bulletId = bullet.getComponent(Bullet).id;
-        let bulletPool = this.bulletPools.get(bulletId);
-        bulletPool.put(bullet);
-    }
-
-    update(deltaTime: number) {
-        
-    }
 }
 
 

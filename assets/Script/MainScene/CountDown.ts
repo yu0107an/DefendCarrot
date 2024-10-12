@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, tween, v3, Vec3 } from 'cc';
+import { _decorator, Component, Node, tween, v3 } from 'cc';
 import { EventManager } from './EventManager';
 const { ccclass, property } = _decorator;
 

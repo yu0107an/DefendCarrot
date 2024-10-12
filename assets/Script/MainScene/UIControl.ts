@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Event, Label, SpriteAtlas, Sprite, v3, Vec2, Prefab, instantiate, v2, Button, director } from 'cc';
+import { _decorator, Component, Node, Event, Label, SpriteAtlas, Sprite, v3, Prefab, instantiate, Button, Vec3 } from 'cc';
 import { EventManager, IObserverType } from './EventManager';
 import { ChoiceCard } from './ChoiceCard';
 import { AttackPoint } from './AttackPoint';
@@ -10,9 +10,7 @@ export class UIControl extends Component implements IObserver {
 
     @property(SpriteAtlas)
     atlas: SpriteAtlas;
-    @property(Prefab)
-    selectPrefab: Prefab;
-    selectNode: Node;
+    
     @property(Prefab)
     attackPointPrefab: Prefab;
     attackPoint: Node;
@@ -102,7 +100,7 @@ export class UIControl extends Component implements IObserver {
         EventManager.Instance.setGameSpeed(targetSpeed);
     }
 
-    drawTowerInfo(pos: Vec2, upgradePrice: string, sellPrice: string, func: any)
+    drawTowerInfo(pos: Vec3, upgradePrice: string, sellPrice: string, func: any)
     {
         //升级塔
         if (Number(upgradePrice) > Number(this.coin.getComponent(Label).string))
@@ -152,7 +150,6 @@ export class UIControl extends Component implements IObserver {
             EventManager.Instance.clearTowerRangeAndInfo();
             this.clearTowerInfo();
             func('sell');
-            EventManager.Instance.changeMapValue(Math.floor((pos.x + 480) / 80), Math.floor((pos.y + 320) / 80), 3);
             EventManager.Instance.createEffect(pos, 'Air');
         })
         this.sellNode.setPosition(v3(pos.x, pos.y - 80));
@@ -167,6 +164,28 @@ export class UIControl extends Component implements IObserver {
             this.sellNode.active = false;
             this.sellNode.off(Node.EventType.TOUCH_END);
         }
+    }
+
+    isClickScreen(): Boolean
+    {
+        if (this.choiceCard.active)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    isClickTower(): Boolean
+    {
+        if (!this.sellNode && !this.upgradeNode)
+        {
+            return false;
+        }
+        if (this.sellNode.active && this.upgradeNode.active)
+        {
+            return true;
+        }
+        return false;
     }
 
     createAttackPoint(target: Node)
@@ -204,35 +223,12 @@ export class UIControl extends Component implements IObserver {
         return null;
     }
 
-    clickScreen(x: number, y: number)
+    showChoiceCard(pos: Vec3)
     {
-        if (this.selectNode)
-        {
-            if (this.selectNode.position.x === x * 80 + 40 -480 && this.selectNode.position.y === y * 80 + 40 -320)
-            {
-                this.selectNode.active = !this.selectNode.active;
-                this.choiceCard.active = !this.choiceCard.active;
-            }
-            else
-            {
-                this.selectNode.active = true;
-                this.choiceCard.active = true;
-            }
-        }
-        else
-        {
-            let selectNode = instantiate(this.selectPrefab);
-            selectNode.name = 'Select';
-            this.node.addChild(selectNode);
-            this.selectNode = selectNode;
-            this.choiceCard.active = true;
-        }
-
-        if (this.selectNode.active && this.choiceCard.active)
-        {
-            this.selectNode.setPosition(v3(x * 80 + 40 - 480, y * 80 + 40 - 320));
-            this.choiceCard.getComponent(ChoiceCard).changePos(v2(x * 80 + 40, y * 80 + 40));
-        }
+        let x = Math.floor(pos.x / 80) * 80 + 40;
+        let y = Math.floor(pos.y / 80) * 80 + 40;
+        this.choiceCard.active = true;
+        this.choiceCard.getComponent(ChoiceCard).changePos(v3(x, y));
     }
 
     gameCoinChanged(coinNumber: number)

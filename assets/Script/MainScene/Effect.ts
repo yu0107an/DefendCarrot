@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Animation } from 'cc';
+import { _decorator, Component, Node, Animation, tween, v3 } from 'cc';
 import { EffectLayer } from './EffectLayer';
 const { ccclass, property } = _decorator;
 
@@ -6,15 +6,16 @@ const { ccclass, property } = _decorator;
 export class Effect extends Component {
 
     followTarget: Node;
-    start() {
     
-    }
-
     unuse()
     {
         this.followTarget = null;
         let animation = this.node.getComponent(Animation);
-        animation.off(Animation.EventType.LASTFRAME, this.finished, this);
+        if (animation)
+        {
+            animation.off(Animation.EventType.LASTFRAME, this.recycleSelf, this);
+        }
+        
     }
 
     reuse(followTarget: Node)
@@ -23,27 +24,26 @@ export class Effect extends Component {
         {
             this.followTarget = followTarget[0];
         }
+
         let animation = this.node.getComponent(Animation);
-        animation.on(Animation.EventType.LASTFRAME, this.finished, this);
+        if (animation)
+        {
+            animation.on(Animation.EventType.LASTFRAME, this.recycleSelf, this);
+        }
+
+        if (this.node.name.search(/money/gi) !== -1)
+        {
+            tween(this.node)
+                .by(0.5, { position: v3(0, 20, 0) })
+                .call(this.recycleSelf.bind(this))
+                .start();
+        }
     }
     
-    finished()
+    recycleSelf()
     {
         let nodePool = this.node.parent.getComponent(EffectLayer).effectPools.get(this.node.name);
         nodePool.put(this.node);
-    }
-
-    gameStateChanged(isPaused: boolean)
-    {
-        let animation = this.node.getComponent(Animation);
-        if (isPaused)
-        {
-            animation.pause();
-        }
-        else
-        {
-            animation.resume(); 
-        }
     }
 
     update(deltaTime: number){
@@ -55,7 +55,7 @@ export class Effect extends Component {
             }
             else
             {
-                this.finished();    
+                this.recycleSelf();    
             }
         }
     }

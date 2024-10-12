@@ -1,4 +1,4 @@
-import { _decorator, Component, instantiate, JsonAsset, Node, NodePool, Prefab, v2 } from 'cc';
+import { _decorator, Component, instantiate, JsonAsset, Node, NodePool, Prefab, v2, v3 } from 'cc';
 import { Enemy } from './Enemy';
 import { struct } from './AStar';
 import { EventManager, IObserverType } from './EventManager';
@@ -23,12 +23,10 @@ export class EnemyLayer extends Component implements IObserver {
         
     }
 
-    init(monsterId: any, waveDt: any)
+    init(monsterId: any, waveDt: any, path: struct[])
     {
         this.enemyPool = new NodePool('Enemy');
-        let start: struct = { x: 1, y: 6 };
-        let end: struct = { x: 10, y: 6 };
-        this.path = EventManager.Instance.findPath_AStar(start, end, 1);
+        this.path = path;
         this.enemyPrefab.forEach((value,index) => {
             for (let i = 0; i < 8; i++)
             {
@@ -52,15 +50,20 @@ export class EnemyLayer extends Component implements IObserver {
 
     createEnemyTimer()
     {
-        let newEnemy = this.enemyPool.get(this.path, v2(-360, 120));
+        let newEnemy = this.enemyPool.get(this.path);
         if (newEnemy === null)
         {
             let monsterId = this.monsterId[Math.floor(Math.random() * this.monsterId.length)];
             newEnemy = instantiate(this.enemyPrefab[monsterId]);
         }
         this.node.addChild(newEnemy);
-        EventManager.Instance.createEffect(v2(-360, 120), 'Appear', newEnemy);
+        EventManager.Instance.createEffect(v3(-360, 120), 'Appear', newEnemy);
         this.enemyCount += 1;
+    }
+
+    reduceHp_Enemy(enemy: Node, atk: number)
+    {
+        enemy.getComponent(Enemy).reduceHp(atk);
     }
 
     gameStateChanged(isPaused: boolean)

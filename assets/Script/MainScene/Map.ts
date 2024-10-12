@@ -1,36 +1,43 @@
-import { _decorator, Component, instantiate, Node, Prefab, Sprite, SpriteAtlas, tween, UIOpacity, v2, v3, Vec2 } from 'cc';
+import { _decorator, Component, Node, TiledMap, TiledObjectGroup} from 'cc';
 import { EventManager } from './EventManager';
+import { struct } from './AStar';
+import { ObstacleInfo } from './ObstacleLayer';
 const { ccclass, property } = _decorator;
 
 @ccclass('Map')
 export class Map extends Component {
 
-    //0表示不可创建，1表示怪物移动路径，2表示有障碍物，3表示空位，4表示已有塔
-    map: number[][] = new Array<Array<number>>(12);
+    objects: TiledObjectGroup;
 
-    start() {
-        let x0 = [0, 1, 2, 9, 10, 11, 0, 1, 10, 11];
-        let y0 = [0, 0, 0, 0, 0,  0,  1, 1, 1,  1];
-        let x1 = [1, 2, 3, 4, 7, 8, 9, 10, 1, 4, 5, 6, 7, 10, 1, 10, 1, 10];
-        let y1 = [2, 2, 2, 2, 2, 2, 2, 2,  3, 3, 3, 3, 3, 3 , 4, 4 , 5, 5];
-        for (let i = 0; i < this.map.length; i++)
-        {
-            this.map[i] = new Array<number>(7).fill(3);
-        }
-        for (let i = 0; i < x0.length; i++)
-        {
-            this.map[x0[i]][y0[i]] = 0;
-        }
-        for (let i = 0; i < x1.length; i++)
-        {
-            this.map[x1[i]][y1[i]] = 1;
-        }
-        
+    start()
+    {
+        this.objects = this.node.getComponent(TiledMap).getObjectGroup('PATH');
     }
 
-    init(data: any)
+    getEnemyPath(): struct[]
     {
-        EventManager.Instance.initLevelCard(data);
+        let enemyPath: struct[] = new Array<struct>();
+        this.objects.getObjects().forEach((object) => {
+            if (object.name.search(/PT/gi) !== -1)
+            {
+                let index: number = Number(object.name.split('T', 2)[1]) - 1;
+                enemyPath[index] = { x: object.x + 40, y: object.y - 40 };
+            }
+        })
+        return enemyPath;
+    }
+
+    getObstacleInfo(): Set<ObstacleInfo>
+    {
+        let obstacleInfo = new Set<ObstacleInfo>();
+        this.objects.getObjects().forEach((object) => {
+            if (object.name.search(/\d+Ob\d+/) !== -1)
+            {
+                let id = Number(object.name.split('O', 1)[0]);
+                obstacleInfo.add({ id: id, x: object.x, y: object.y, width: object.width, height: object.height });
+            }
+        })
+        return obstacleInfo;
     }
 
     enableClick()
@@ -45,28 +52,23 @@ export class Map extends Component {
 
     click(event)
     {
-        EventManager.Instance.clearTowerRangeAndInfo();
         let pos = event.getUILocation();
-        let x = Math.floor(pos.x / 80);
-        let y = Math.floor(pos.y / 80);
-
-        switch (this.map[x][y])
+        let index = this.objects.getObjects().findIndex((object) => pos.x >= object.x &&
+                                                                    pos.x <= object.x + object.width &&
+                                                                    pos.y <= object.y &&
+                                                                    pos.y >= object.y - object.height);
+        if (index === -1)
         {
-            case 0 || 1:
-                EventManager.Instance.createForbiddenNode(pos);
-                break;
-            case 2:
-
-                break;
-            case 3:
-                EventManager.Instance.clickScreen(x, y);
-                break;
-            default:
-                break;
+            EventManager.Instance.createForbiddenNode(pos);
+        }
+        else
+        {
+            EventManager.Instance.clickScreen(pos);
         }
     }
 
-    protected onDestroy(): void {
+    protected onDestroy(): void
+    {
         this.disableClick();
     }
 

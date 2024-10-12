@@ -1,7 +1,4 @@
-import { _decorator, Component, director, find, JsonAsset, Node } from 'cc';
-import { EnemyLayer } from './EnemyLayer';
-import { BulletLayer } from './BulletLayer';
-import { Map } from './Map';
+import { _decorator, Component, director, JsonAsset, Node } from 'cc';
 import { GameInfo } from '../GameInfo';
 import { EventManager } from './EventManager';
 const { ccclass, property } = _decorator;
@@ -14,15 +11,9 @@ export class Game extends Component {
     gameSpeed: number = 1;
     isPaused: boolean = false;
     coin: number;
-    gameState_Observers: IObserver[];
-    gameCoin_Observers: IObserver[];
+    gameState_Observers: IObserver[] = new Array<IObserver>();
+    gameCoin_Observers: IObserver[] =new Array<IObserver>();
     oldTick = director.tick;
-
-    onLoad()
-    {
-        this.gameState_Observers = new Array<IObserver>();
-        this.gameCoin_Observers = new Array<IObserver>();
-    }
 
     start()
     {
@@ -40,13 +31,9 @@ export class Game extends Component {
     initLevel()
     {
         let weaponDt = this.levelDt.json[GameInfo.theme - 1].weapon[GameInfo.level - 1];
-        find('Canvas/Map').getComponent(Map).init(weaponDt);
-
         let monsterDt = this.levelDt.json[GameInfo.theme - 1].monsterid[GameInfo.level - 1];
         let waveDt = this.levelDt.json[GameInfo.theme - 1].wavemonstercount[GameInfo.level - 1];
-        this.node.getChildByName('EnemyLayer').getComponent(EnemyLayer).init(monsterDt, waveDt);
-
-        this.node.getChildByName('BulletLayer').getComponent(BulletLayer).initBulletPool(weaponDt, weaponDt.length);
+        EventManager.Instance.initLevelData(weaponDt, monsterDt, waveDt);
     }
 
     gameStateChanged(isPaused: boolean)

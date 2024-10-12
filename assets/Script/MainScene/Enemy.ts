@@ -1,6 +1,4 @@
-import { _decorator, Collider2D, Component, Node, Contact2DType, IPhysics2DContact, ProgressBar, tween, v2, v3, Vec3 } from 'cc';
-import { Tower } from './Tower';
-import { Bullet } from './Bullet';
+import { _decorator, Collider2D, Component, Contact2DType, IPhysics2DContact, Node, ProgressBar, tween, v3, Vec3 } from 'cc';
 import { EnemyLayer } from './EnemyLayer';
 import { struct } from './AStar';
 import { EventManager, IObserverType } from './EventManager';
@@ -20,42 +18,46 @@ export class Enemy extends Component implements IObserver {
     path: Array<struct>;
     eventIndex: number = 0;
 
-    start() {
-
-    }
-
     reuse(data: any)
     {
-        let collider = this.getComponent(Collider2D);
-        if (collider)
-        {
-            collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
-            collider.on(Contact2DType.END_CONTACT, this.onEndContact, this);
-        }
         this.curHp = this.maxHp;
         this.hpBar.progress = 1;
-        this.curPath = 1;
+        this.curPath = 0;
         this.node.children[0].active = false;
-        this.node.setPosition(v3(data[1].x, data[1].y));
         this.path = data[0];
+        this.node.setPosition(v3(this.path[0].x - 480, this.path[0].y - 320));
         this.eventIndex = 0;
         this.onMove();
         EventManager.Instance.addObserver(this, IObserverType.GameState);
         this.node.on(Node.EventType.TOUCH_END, this.click, this);
+
+        let collider = this.node.getComponent(Collider2D);
+        if (collider)
+        {
+            collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+        }
     }
 
     unuse()
     {
-        let collider = this.getComponent(Collider2D);
-        if (collider)
-        {
-            collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
-            collider.off(Contact2DType.END_CONTACT, this.onEndContact, this);
-        }
         EventManager.Instance.delObserver(this, IObserverType.GameState);
         if (this.node === EventManager.Instance.getAttackPoint())
         {
             EventManager.Instance.cancelAttackPoint();
+        }
+        let collider = this.node.getComponent(Collider2D);
+        if (collider)
+        {
+            collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+        }
+    }
+
+    onBeginContact(self: Collider2D, other: Collider2D, contact: IPhysics2DContact)
+    {
+        if (other.group === 16)
+        {
+            EventManager.Instance.reduceHp_Carrot(1);
+            this.recycleSelf();
         }
     }
 
@@ -69,8 +71,10 @@ export class Enemy extends Component implements IObserver {
         this.hpBar = this.node.children[0].children[0].getComponent(ProgressBar);
     }
 
+    //点击敌人,确认攻击目标
     click()
     {
+        //取消攻击目标
         if (this.node === EventManager.Instance.getAttackPoint())
         {
             EventManager.Instance.cancelAttackPoint();
@@ -80,35 +84,6 @@ export class Enemy extends Component implements IObserver {
             EventManager.Instance.confirmAttackPoint(this.node);
         }
         
-    }
-
-    onBeginContact(self: Collider2D, other: Collider2D, contact: IPhysics2DContact)
-    {
-        switch (other.group)
-        {
-            case 2:
-                other.node.parent.getComponent(Tower).changeAttackNumber(true, self.node);
-                break;
-            case 8:
-                EventManager.Instance.recycleBullet(other.node.parent);
-                let bulletAtk = other.node.parent.getComponent(Bullet).atk;
-                this.reduceHp(bulletAtk);
-                break;
-            case 16:
-                EventManager.Instance.reduceHp_Carrot(1);
-                this.recycleSelf();
-                break;
-            default:
-                break;
-        }
-    }
-
-    onEndContact(self: Collider2D, other: Collider2D, contact: IPhysics2DContact)
-    {
-        if (other.group === 2)
-        {
-            other.node.parent.getComponent(Tower).changeAttackNumber(false);
-        }
     }
 
     gameStateChanged(isPaused: boolean)
@@ -123,6 +98,7 @@ export class Enemy extends Component implements IObserver {
         }
     }
 
+    //扣血
     reduceHp(atk: number)
     {
         if (!this.node.children[0].active)
@@ -132,6 +108,7 @@ export class Enemy extends Component implements IObserver {
         this.curHp -= atk;
         if (this.curHp <= 0)
         {
+            EventManager.Instance.createEffect(this.node.position, 'Money', null, this.reward);
             EventManager.Instance.changeCoin(this.reward);
             this.curMove.stop();
             this.recycleSelf();
@@ -146,8 +123,8 @@ export class Enemy extends Component implements IObserver {
         {
             return;
         }
-        let targetX = this.path[this.curPath].x * 80 + 40 - 480;
-        let targetY = this.path[this.curPath].y * 80 + 40 - 320;
+        let targetX = this.path[this.curPath + 1].x - 480;
+        let targetY = this.path[this.curPath + 1].y - 320;
         let distance = Math.abs(targetX - this.node.position.x) + Math.abs(targetY - this.node.position.y);
         let time = distance / this.moveSpeed;
         this.curMove = tween(this.node)
@@ -164,18 +141,12 @@ export class Enemy extends Component implements IObserver {
 
     recycleSelf()
     {
-        EventManager.Instance.createEffect(v2(this.node.position.x, this.node.position.y), 'Air');
+        EventManager.Instance.createEffect(this.node.position, 'Air');
         let enemyPool = this.node.parent.getComponent(EnemyLayer).enemyPool;
         enemyPool.put(this.node);
     }
 
     protected onDestroy(): void {
         this.node.off(Node.EventType.TOUCH_END);
-        let collider = this.getComponent(Collider2D);
-        if (collider)
-        {
-            collider.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
-            collider.off(Contact2DType.END_CONTACT, this.onEndContact, this);
-        }
     }
 }

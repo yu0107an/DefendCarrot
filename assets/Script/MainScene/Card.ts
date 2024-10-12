@@ -1,4 +1,4 @@
-import { _decorator, Component, find, Node, resources, Sprite, SpriteAtlas, SpriteFrame, v2} from 'cc';
+import { _decorator, Component, Node, resources, Sprite, SpriteAtlas, SpriteFrame, v3} from 'cc';
 import { ChoiceCard } from './ChoiceCard';
 import { EventManager } from './EventManager';
 const { ccclass, property } = _decorator;
@@ -7,7 +7,7 @@ const { ccclass, property } = _decorator;
 export class Card extends Component {
 
     imgs: SpriteFrame[] = new Array<SpriteFrame>(2);
-    data: any;
+    id: number;
 
     start() {
         this.node.on(Node.EventType.TOUCH_END, this.click, this);
@@ -21,7 +21,7 @@ export class Card extends Component {
             this.imgs[1] = atlas.getSpriteFrame(data.shopimg[1].split('.', 1)[0]);
             this.addComponent(Sprite).spriteFrame = this.imgs[1];
         })
-        this.data = data;
+        this.id = data.weaponID;
     }
 
     click(event)
@@ -29,11 +29,10 @@ export class Card extends Component {
         let pos = this.node.parent.getComponent(ChoiceCard).curPos;
         let x = Math.floor(pos.x / 80);
         let y = Math.floor(pos.y / 80);
-        EventManager.Instance.changeMapValue(x, y, 4);
-        EventManager.Instance.createTower(this.data, pos);
+        EventManager.Instance.createTower(this.id, pos);
         EventManager.Instance.disableSelect();
         event.propagationStopped = true;
-        EventManager.Instance.createEffect(v2(pos.x - 480, pos.y - 320), 'Air');
+        EventManager.Instance.createEffect(v3(pos.x - 480, pos.y - 320), 'Air');
     }
 
     protected onDestroy(): void {
