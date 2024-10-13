@@ -90,5 +90,3 @@ export class Bullet extends Component implements IObserver {
         bulletPool.put(this.node);
     }
 }
-
-

@@ -46,7 +46,7 @@ export class TowerChildren extends Component {
         switch (other.group)
         {
             case 4:
-                this.node.parent.getComponent(Tower).changeAttackNumber(false);
+                this.node.parent.getComponent(Tower).changeAttackNumber(false, other.node);
                 break;
             default:
                 break;

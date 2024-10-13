@@ -28,6 +28,10 @@ export class BulletChildren extends Component {
                 EventManager.Instance.reduceHp_Enemy(other.node, this.node.parent.getComponent(Bullet).atk);
                 break;
             case 32:
+                if (this.node.parent.getComponent(Bullet).target !== other.node)
+                {
+                    return;
+                }
                 EventManager.Instance.reduceHp_Obstacle(other.node, this.node.parent.getComponent(Bullet).atk);
                 break;
             default:

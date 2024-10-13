@@ -32,6 +32,10 @@ export class BulletLayer extends Component {
 
     addBullet(name: string, towerId: number, towerLevel: number, pos: Vec3, target: Node, angle: number)
     {
+        if (!target || !target.parent)
+        {
+            return;
+        }
         let bulletPool = this.bulletPools.get(towerId);
         let bullet = bulletPool.get(name, towerLevel, target);
         if (bullet === null)

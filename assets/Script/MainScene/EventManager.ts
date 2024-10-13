@@ -195,7 +195,7 @@ export class EventManager {
         this.UI2Ts.enableAllButton();
     }
 
-    //创建一波敌人
+    //开始创建敌人(一关只调用一次)
     createEnemy()
     {
         this.enemyLayerTs.createEnemy();
@@ -229,7 +229,7 @@ export class EventManager {
     //Carrot扣血
     reduceHp_Carrot(count: number)
     {
-        this.carrotTs.reduceHp(count);
+        //this.carrotTs.reduceHp(count);
     }
 
     //障碍物扣血

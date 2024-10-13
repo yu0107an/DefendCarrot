@@ -1,6 +1,7 @@
 import { _decorator, Component, Node, v2, Animation } from 'cc';
 import { EventManager, IObserverType } from './EventManager';
 import { TowerChildren } from './TowerChildren';
+import { PriorityQueue } from '../PriorityQueue';
 const { ccclass, property } = _decorator;
 
 @ccclass('Tower')
@@ -12,7 +13,7 @@ export class Tower extends Component implements IObserver {
     sellPrice: number[];//卖塔所得费用
     shootSpeed: number[];//射击速度
     attackRange: number[];//攻击范围
-    attackTarget_Enemy: Node[] = new Array<Node>();//在范围内的敌人集合
+    attackTarget_Enemy: PriorityQueue = new PriorityQueue;//在范围内的敌人集合
     attackTarget_Obstacle: Node[] = new Array<Node>();//在范围内的障碍物集合
     curAttackTarget: Node;//当前攻击目标
     attackPoint: Node;//攻击点(玩家手动点击的攻击目标,优先处理攻击点)
@@ -83,19 +84,25 @@ export class Tower extends Component implements IObserver {
             if (target === EventManager.Instance.getAttackPoint())
             {
                 this.attackPoint = target;
-                this.curAttackTarget = target;
             }
         }
         else
         {
-            if (this.attackTarget_Enemy[0] === EventManager.Instance.getAttackPoint())
+            if (target)
             {
-                this.attackPoint = null;
+                this.attackTarget_Enemy.splice(this.attackTarget_Enemy.findIndex(target), 1);
             }
-            this.attackTarget_Enemy.shift();
+            else
+            {
+                if (this.attackTarget_Enemy[0] === EventManager.Instance.getAttackPoint())
+                {
+                    this.attackPoint = null;
+                }
+                this.attackTarget_Enemy.shift();
+            }
             this.changeState('idle');
         }
-        this.curAttackTarget = this.attackTarget_Enemy[0];
+        this.curAttackTarget = this.attackTarget_Enemy.get(0);
     }
 
     //将障碍物加进自身范围
@@ -110,11 +117,11 @@ export class Tower extends Component implements IObserver {
         let index = -1;
         if (target.parent.name === 'EnemyLayer')
         {
-            index = this.attackTarget_Enemy.findIndex(value => value === target)
+            index = this.attackTarget_Enemy.findIndex(target);
         }
         else if (target.parent.name === 'ObstacleLayer')
         {
-            index = this.attackTarget_Obstacle.findIndex(value => value === target)
+            index = this.attackTarget_Obstacle.findIndex(value => value === target);
         }
 
         if (index !== -1)
@@ -176,21 +183,26 @@ export class Tower extends Component implements IObserver {
     }
 
     update(deltaTime: number) {
-        if (this.isPause || (!this.attackPoint && !this.curAttackTarget))
+        if (this.isPause || (!this.attackPoint && this.attackTarget_Enemy.size() === 0))
         {
             return;
         }
 
-        let target;
+        let target = null;
         if (this.attackPoint)
         {
             target = this.attackPoint;
             this.update_attackPoint(target);
         }
-        else
+        else if(this.curAttackTarget)
         {
             target = this.curAttackTarget;
             this.update_attackTarget(target);
+        }
+        else
+        {
+            console.log(1)
+            this.changeAttackNumber(false);
         }
     }
 
@@ -235,7 +247,7 @@ export class Tower extends Component implements IObserver {
         let rotation = Math.atan2(dir.y, dir.x) * (180 / Math.PI) - 90;
         this.node.children[this.level - 1].angle = this.lerpAngle(this.node.children[this.level - 1].angle, rotation, 0.15);
             
-        if (Math.floor(this.node.children[this.level - 1].angle) + 1 >= Math.floor(rotation) - 1)
+        if (Math.floor(this.node.children[this.level - 1].angle) + 3 >= Math.floor(rotation) - 1)
         {
             this.changeState('shot');
         }

@@ -141,8 +141,12 @@ export class Enemy extends Component implements IObserver {
 
     recycleSelf()
     {
+        if (this.node.parent.children.length === 1)
+        {
+            this.node.parent.getComponent(EnemyLayer).createEnemy();
+        }
         EventManager.Instance.createEffect(this.node.position, 'Air');
-        let enemyPool = this.node.parent.getComponent(EnemyLayer).enemyPool;
+        let enemyPool = this.node.parent.getComponent(EnemyLayer).enemyPools.get(this.node.name);
         enemyPool.put(this.node);
     }
 
