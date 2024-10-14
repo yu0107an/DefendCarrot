@@ -277,6 +277,12 @@ export class EventManager {
         this.gameTs.gameCoinChanged(count);
     }
 
+    //改变UI层波数显示
+    changeWaveLabel(wave: number)
+    {
+        this.UI2Ts.changeWaveLabel(wave);
+    }
+
     //设置游戏倍速
     setGameSpeed(speed: number)
     {

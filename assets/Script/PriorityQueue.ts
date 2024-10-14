@@ -64,6 +64,11 @@ export class PriorityQueue extends Component
         return this.nodes.length;
     }
 
+    clear()
+    {
+        this.nodes.length = 0;
+    }
+
     private compare(curIndex: number, targetIndex: number): Boolean
     {
         let curNode = this.nodes[curIndex].getComponent(Enemy);

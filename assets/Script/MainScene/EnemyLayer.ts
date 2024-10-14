@@ -51,6 +51,7 @@ export class EnemyLayer extends Component implements IObserver {
             return;
         }
         this.curWave += 1;
+        EventManager.Instance.changeWaveLabel(this.curWave);
         this.curWaveFinish = false;
         let totalEnemies = this.waveDt[this.curWave - 1];
         this.enemyCount = 0;

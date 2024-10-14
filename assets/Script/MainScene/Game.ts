@@ -7,10 +7,10 @@ const { ccclass, property } = _decorator;
 export class Game extends Component {
 
     @property(JsonAsset)
-    levelDt: JsonAsset;
-    gameSpeed: number = 1;
-    isPaused: boolean = false;
-    coin: number;
+    levelDt: JsonAsset;//关卡数据
+    gameSpeed: number = 1;//游戏倍速
+    isPaused: boolean = false;//是否暂停
+    coin: number;//金币数
     gameState_Observers: IObserver[] = new Array<IObserver>();
     gameCoin_Observers: IObserver[] =new Array<IObserver>();
     oldTick = director.tick;
@@ -22,17 +22,17 @@ export class Game extends Component {
                 this.oldTick.call(director, dt * (this.gameSpeed));
             }
         }, 1);
-        
         this.initLevel();
-        this.coin = 0;
-        this.gameCoinChanged(this.levelDt.json[GameInfo.theme - 1].initgold[GameInfo.level - 1]);
     }
 
     initLevel()
     {
+        this.coin = 0;
+        GameInfo.maxWave = this.levelDt.json[GameInfo.theme - 1].wave[GameInfo.level - 1];
         let weaponDt = this.levelDt.json[GameInfo.theme - 1].weapon[GameInfo.level - 1];
         let monsterDt = this.levelDt.json[GameInfo.theme - 1].monsterid[GameInfo.level - 1];
         let waveDt = this.levelDt.json[GameInfo.theme - 1].wavemonstercount[GameInfo.level - 1];
+        this.gameCoinChanged(this.levelDt.json[GameInfo.theme - 1].initgold[GameInfo.level - 1]);
         EventManager.Instance.initLevelData(weaponDt, monsterDt, waveDt);
     }
 

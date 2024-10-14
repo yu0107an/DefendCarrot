@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, v2, Animation } from 'cc';
+import { _decorator, Component, Node, v2, Animation, Vec3 } from 'cc';
 import { EventManager, IObserverType } from './EventManager';
 import { TowerChildren } from './TowerChildren';
 import { PriorityQueue } from '../PriorityQueue';
@@ -48,7 +48,9 @@ export class Tower extends Component implements IObserver {
             EventManager.Instance.changeCoin(-this.createPrice[this.level]);
             this.level += 1;
             this.node.children[this.level - 1].getComponent(TowerChildren).setActive(true);
-
+            this.attackTarget_Enemy.clear();
+            this.attackTarget_Obstacle.length = 0;
+            this.curState = 'idle';
         }
         else if (type === 'sell')
         {
@@ -185,6 +187,7 @@ export class Tower extends Component implements IObserver {
     update(deltaTime: number) {
         if (this.isPause || (!this.attackPoint && this.attackTarget_Enemy.size() === 0))
         {
+            this.changeState('idle');
             return;
         }
 
@@ -201,16 +204,8 @@ export class Tower extends Component implements IObserver {
         }
         else
         {
-            console.log(1)
             this.changeAttackNumber(false);
         }
-    }
-
-    // 插值函数，用于计算平滑角度变化
-    lerpAngle(curAngle, targetAngle, t)
-    {
-        let diff = (targetAngle - curAngle + 180) % 360 - 180; // 计算差值
-        return curAngle + diff * t;
     }
 
     update_attackPoint(target: Node)
@@ -244,13 +239,31 @@ export class Tower extends Component implements IObserver {
         let dx = target.position.x - this.node.position.x;
         let dy = target.position.y - this.node.position.y;
         let dir = v2(dx, dy).normalize();
-        let rotation = Math.atan2(dir.y, dir.x) * (180 / Math.PI) - 90;
-        this.node.children[this.level - 1].angle = this.lerpAngle(this.node.children[this.level - 1].angle, rotation, 0.15);
+
+        //计算目标所在角度(Math.atan2方法计算弧度，乘以(180 / Math.PI)转化为角度，-90转换防御塔朝向)
+        let rotation = this.normalizeAngle(Math.atan2(dir.y, dir.x) * (180 / Math.PI) - 90);
+
+        let curAngle = this.normalizeAngle(this.node.children[this.level - 1].angle);
+        this.node.children[this.level - 1].angle = this.lerpAngle(curAngle, rotation, 0.15);
             
-        if (Math.floor(this.node.children[this.level - 1].angle) + 3 >= Math.floor(rotation) - 1)
+        console.log(this.node.children[this.level - 1].angle, rotation);
+        if (Math.abs(Math.floor(this.node.children[this.level - 1].angle) - Math.floor(rotation) - 1) <= 2)
         {
             this.changeState('shot');
         }
+    }
+
+    // 插值函数，用于计算平滑角度变化
+    lerpAngle(curAngle, targetAngle, t)
+    {
+        let diff = (targetAngle - curAngle + 180) % 360 - 180; // 计算差值
+        return curAngle + diff * t;
+    }
+
+    //将角度限制在0~360度
+    normalizeAngle(angle: number): number
+    {
+        return (angle + 360) % 360;
     }
 
     protected onDestroy(): void {

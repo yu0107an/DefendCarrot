@@ -9,10 +9,6 @@ export class ChoiceCard extends Component {
     weaponDt: JsonAsset;
     curPos: Vec3;
 
-    start() {
-        
-    }
-
     initAllCard(data: any)
     {
         this.node.getComponent(UITransform).setContentSize(new Size(80 * data.length, 80));
@@ -25,7 +21,7 @@ export class ChoiceCard extends Component {
         this.node.active = false;
     }
 
-    changePos(pos: Vec3)
+    changePos(pos: Vec3, coin: number)
     {
         let width = this.node.getComponent(UITransform).width;
         let height = this.node.getComponent(UITransform).height;
@@ -45,17 +41,15 @@ export class ChoiceCard extends Component {
         }
         this.node.setPosition(v3(x - 480, y - 320 + 80));
         this.curPos = pos;
-        this.node.children.forEach((value) => {
-            value.scale = new Vec3(0, 0, 0);
-            tween(value)
+        this.node.children.forEach((card) => {
+            card.getComponent(Card).show(coin);
+            card.scale = new Vec3(0, 0, 0);
+            tween(card)
                 .to(0.3, { scale: new Vec3(1, 1, 1) })
                 .start();
         })
     }
 
-    update(deltaTime: number) {
-        
-    }
 }
 
 

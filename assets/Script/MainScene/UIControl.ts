@@ -23,10 +23,11 @@ export class UIControl extends Component implements IObserver {
 
     onLoad() {
         EventManager.Instance.addObserver(this, IObserverType.Coin);
-        this.coin = this.node.getChildByName('UP').getChildByName('Coin');
+        this.coin = this.node.getChildByPath('UP/Coin');
     }
 
     start() {
+        this.node.getChildByPath('UP/AllWave').getComponent(Label).string = GameInfo.maxWave.toString();
         this.choiceCard = this.node.getChildByName('ChoiceCard');
         this.disableAllButton();
     }
@@ -70,6 +71,20 @@ export class UIControl extends Component implements IObserver {
         {
             EventManager.Instance.pauseGame(prePauseState);
         }
+    }
+
+    changeWaveLabel(wave: number)
+    {
+        let str;
+        if (wave < 10)
+        {
+            str = '0' + '  ' + wave.toString();
+        }
+        else
+        {
+            str = (wave / 10).toString() + '  ' + (wave % 10).toString();
+        }
+        this.node.getChildByPath('UP/CurWave').getComponent(Label).string = str;
     }
 
     pauseGameButton()
@@ -223,12 +238,13 @@ export class UIControl extends Component implements IObserver {
         return null;
     }
 
+    //显示防御塔卡片
     showChoiceCard(pos: Vec3)
     {
         let x = Math.floor(pos.x / 80) * 80 + 40;
         let y = Math.floor(pos.y / 80) * 80 + 40;
         this.choiceCard.active = true;
-        this.choiceCard.getComponent(ChoiceCard).changePos(v3(x, y));
+        this.choiceCard.getComponent(ChoiceCard).changePos(v3(x, y), Number(this.coin.getComponent(Label).string));
     }
 
     gameCoinChanged(coinNumber: number)

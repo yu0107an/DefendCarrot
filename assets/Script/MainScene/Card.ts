@@ -8,6 +8,8 @@ export class Card extends Component {
 
     imgs: SpriteFrame[] = new Array<SpriteFrame>(2);
     id: number;
+    createCoin: number;//建造所需花费
+    canClick: Boolean;
 
     start() {
         this.node.on(Node.EventType.TOUCH_END, this.click, this);
@@ -22,10 +24,31 @@ export class Card extends Component {
             this.addComponent(Sprite).spriteFrame = this.imgs[1];
         })
         this.id = data.weaponID;
+        this.createCoin = data.createprice[0];
+    }
+
+    show(coin: number)
+    {
+        let index;
+        if (coin >= this.createCoin)
+        {
+            index = 1;
+            this.canClick = true;
+        }
+        else
+        {
+            index = 0;
+            this.canClick = false;
+        }
+        this.getComponent(Sprite).spriteFrame = this.imgs[index];
     }
 
     click(event)
     {
+        if (!this.canClick)
+        {
+            return;
+        }
         let pos = this.node.parent.getComponent(ChoiceCard).curPos;
         let x = Math.floor(pos.x / 80);
         let y = Math.floor(pos.y / 80);
