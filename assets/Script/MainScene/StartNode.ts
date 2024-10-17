@@ -1,12 +1,16 @@
-import { _decorator, Component, Node, Animation } from 'cc';
+import { _decorator, Component, Node, Animation, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('StartNode')
 export class StartNode extends Component {
 
-    start() {
+    init(startPos: Vec3, nextPos: Vec3)
+    {
+        this.node.setPosition(startPos.x - 480, startPos.y - 320);
         let arrow = this.node.getChildByName('Arrow');
-        arrow.angle = this.node.angle - 90;
+        let dx = Math.floor(nextPos.x - startPos.x);
+        let dy = Math.floor(nextPos.y - startPos.y);
+        arrow.angle = Math.atan2(dy, dx) * (180 / Math.PI);
         this.scheduleOnce(() => {
             arrow.getComponent(Animation).stop();
             arrow.active = false;

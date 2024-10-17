@@ -3,6 +3,8 @@ import { EventManager, IObserverType } from './EventManager';
 import { ChoiceCard } from './ChoiceCard';
 import { AttackPoint } from './AttackPoint';
 import { GameInfo } from '../GameInfo';
+import { CountDown } from './CountDown';
+import { Carrot } from './Carrot';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIControl')
@@ -26,12 +28,24 @@ export class UIControl extends Component implements IObserver {
         this.coin = this.node.getChildByPath('UP/Coin');
     }
 
-    start() {
+    init(carrotPos: Vec3)
+    {
         this.node.getChildByPath('UP/AllWave').getComponent(Label).string = GameInfo.maxWave.toString();
         this.choiceCard = this.node.getChildByName('ChoiceCard');
         this.disableAllButton();
+
+        this.node.getChildByName('CountDown').getComponent(CountDown).init();
+        this.node.getChildByName('Carrot').setPosition(carrotPos.x - 480, carrotPos.y - 320);
     }
     
+    showLoading()
+    {
+        this.node.getChildByName('Loading').active = true;
+        this.scheduleOnce(() => {
+            this.node.getChildByName('Loading').active = false;
+        }, 0.8);
+    }
+
     disableAllButton()
     {
         this.node.getComponentsInChildren(Button).forEach((value) => {

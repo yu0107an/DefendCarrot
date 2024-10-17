@@ -25,19 +25,24 @@ export class BulletChildren extends Component {
         switch (other.group)
         {
             case 4:
-                EventManager.Instance.reduceHp_Enemy(other.node, this.node.parent.getComponent(Bullet).atk);
+                EventManager.Instance.reduceHp_Enemy(other.node, self.node.parent.getComponent(Bullet).atk);
+                let parentTs = self.node.parent.getComponent(Bullet);
+                if (parentTs.speedBuff !== 0)
+                {
+                    EventManager.Instance.speedDown_Enemy(other.node, parentTs.speedBuff, parentTs.shoterName);
+                }
                 break;
             case 32:
                 if (this.node.parent.getComponent(Bullet).target !== other.node)
                 {
                     return;
                 }
-                EventManager.Instance.reduceHp_Obstacle(other.node, this.node.parent.getComponent(Bullet).atk);
+                EventManager.Instance.reduceHp_Obstacle(other.node, self.node.parent.getComponent(Bullet).atk);
                 break;
             default:
                 break;
         }
-        this.node.parent.getComponent(Bullet).recycleSelf();
+        this.node.parent.getComponent(Bullet).recycleSelf(true);
     }
 
     protected onDestroy(): void {

@@ -11,6 +11,7 @@ export class Enemy extends Component implements IObserver {
     maxHp: number;
     curHp: number;
     moveSpeed: number;
+    curSpeedBuff: number;
     reward: number;
     curPath: number;
     hpBar: ProgressBar;
@@ -23,6 +24,7 @@ export class Enemy extends Component implements IObserver {
         this.curHp = this.maxHp;
         this.hpBar.progress = 1;
         this.curPath = 0;
+        this.curSpeedBuff = 100;
         this.node.children[0].active = false;
         this.path = data[0];
         this.node.setPosition(v3(this.path[0].x - 480, this.path[0].y - 320));
@@ -117,6 +119,25 @@ export class Enemy extends Component implements IObserver {
         this.hpBar.progress = percent;
     }
 
+    //减速
+    speedDown(speedBuff: number, shoterName: string)
+    {
+        this.curSpeedBuff = speedBuff;
+        this.curMove.stop();
+        this.onMove();
+        EventManager.Instance.setEffect(this.node, shoterName, 3);
+        this.unschedule(this.speedDownOver.bind(this));
+        this.scheduleOnce(this.speedDownOver.bind(this), 3);
+    }
+
+    //减速结束
+    speedDownOver()
+    {
+        this.curSpeedBuff = 100;
+        this.curMove.stop();
+        this.onMove();
+    }
+
     onMove()
     {
         if (this.curHp <= 0)
@@ -126,7 +147,7 @@ export class Enemy extends Component implements IObserver {
         let targetX = this.path[this.curPath + 1].x - 480;
         let targetY = this.path[this.curPath + 1].y - 320;
         let distance = Math.abs(targetX - this.node.position.x) + Math.abs(targetY - this.node.position.y);
-        let time = distance / this.moveSpeed;
+        let time = distance / (this.moveSpeed * (this.curSpeedBuff / 100));
         this.curMove = tween(this.node)
             .to(time, { position: new Vec3(targetX, targetY) })
             .call(() => { 

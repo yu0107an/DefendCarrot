@@ -1,4 +1,4 @@
-import { _decorator, director, find, Node, Vec3 } from 'cc';
+import { _decorator, director, find, Node, v3, Vec3 } from 'cc';
 import { Game } from './Game';
 import { EffectLayer } from './EffectLayer';
 import { UI1 } from './UI1';
@@ -62,13 +62,12 @@ export class EventManager {
         this.towerLayerTs = find('Canvas/Game/TowerLayer').getComponent(TowerLayer);
         this.bulletLayerTs = find('Canvas/Game/BulletLayer').getComponent(BulletLayer);
         this.obstacleLayerTs = find('Canvas/Game/ObstacleLayer').getComponent(ObstacleLayer);
-        this.carrotTs = find('Canvas/Game/Carrot').getComponent(Carrot);
+        this.carrotTs = find('Canvas/UI2/Carrot').getComponent(Carrot);
     }
 
     //添加观察关系
     addObserver(demander: any, ObserverType: IObserverType)
     {
-        
         switch (ObserverType)
         {
             case IObserverType.GameState:
@@ -120,19 +119,34 @@ export class EventManager {
         this.eventIndex = 1;
     }
 
+    //展示加载图片
+    showLoading()
+    {
+        this.UI2Ts.showLoading();
+    }
+    
     //初始化关卡数据(关卡开始时使用)
     initLevelData(weaponDt: any, monsterDt: any, waveDt: any)
     {
+        let enemyPath = this.mapTs.getEnemyPath();
         find('Canvas/UI2/ChoiceCard').getComponent(ChoiceCard).initAllCard(weaponDt);
-        this.enemyLayerTs.init(monsterDt, waveDt, this.mapTs.getEnemyPath());
+        this.enemyLayerTs.init(monsterDt, waveDt, enemyPath);
         this.bulletLayerTs.initBulletPool(weaponDt, weaponDt.length);
         this.obstacleLayerTs.init(this.mapTs.getObstacleInfo());
+        this.UI2Ts.init(v3(enemyPath[enemyPath.length - 1].x, enemyPath[enemyPath.length - 1].y));
+        this.UI1Ts.init(v3(enemyPath[0].x, enemyPath[0].y), v3(enemyPath[1].x, enemyPath[1].y));
     }
 
-    //创建效果
+    //创建effect
     createEffect(pos: Vec3, name: string, followTarget?: Node, coinNumber?: number)
     {
         this.effectLayerTs.createEffect(pos, name, followTarget, coinNumber);
+    }
+
+    //修改指定effect
+    setEffect(target: Node, shoterName: string, destroyTime: number)
+    {
+        this.effectLayerTs.setEffect(target, shoterName, destroyTime);
     }
 
     //画出防御塔范围及升级和销毁按钮
@@ -208,9 +222,9 @@ export class EventManager {
     }
 
     //创建子弹
-    createBullet(name: string, towerId: number, towerLevel: number, pos: Vec3, target: Node, angle: number)
+    createBullet(name: string, towerId: number, towerLevel: number, pos: Vec3, target: Node)
     {
-        this.bulletLayerTs.addBullet(name, towerId, towerLevel, pos, target, angle);
+        this.bulletLayerTs.addBullet(name, towerId, towerLevel, pos, target);
     }
 
     //隐藏选择节点和防御塔卡片
@@ -226,10 +240,16 @@ export class EventManager {
         this.enemyLayerTs.reduceHp_Enemy(enemy, atk);
     }
 
+    //敌人减速
+    speedDown_Enemy(enemy: Node, speedBuff: number, shoterName: string)
+    {
+        this.enemyLayerTs.speedDown_Enemy(enemy, speedBuff, shoterName);
+    }
+
     //Carrot扣血
     reduceHp_Carrot(count: number)
     {
-        //this.carrotTs.reduceHp(count);
+        this.carrotTs.reduceHp(count);
     }
 
     //障碍物扣血

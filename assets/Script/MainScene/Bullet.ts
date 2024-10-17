@@ -64,6 +64,10 @@ export class Bullet extends Component implements IObserver {
                 let dx = this.target.position.x - this.node.position.x;
                 let dy = this.target.position.y - this.node.position.y;
                 this.direction = v2(dx, dy).normalize();
+
+                //旋转子弹
+                let rotation = Math.atan2(this.direction.y, this.direction.x) * (180 / Math.PI) - 90;
+                this.node.angle = rotation;
             }
             else
             {
@@ -72,20 +76,28 @@ export class Bullet extends Component implements IObserver {
         }
         let x = this.node.position.x + this.direction.x * 400 * deltaTime;
         let y = this.node.position.y + this.direction.y * 400 * deltaTime;
-        let screenWidth = view.getVisibleSize().width;
-        let screenHeight = view.getVisibleSize().height;
-        if (x < - screenWidth / 2 - 30 || x > screenWidth / 2 + 30 || y < - screenHeight / 2 - 30 || y > screenHeight / 2 + 30)
+        
+        if (this.isOutScreen(x, y))
         {
-            let bulletPool = this.node.parent.getComponent(BulletLayer).bulletPools.get(this.id);
-            bulletPool.put(this.node);
+            this.recycleSelf(false);
             return;
         }
         this.node.setPosition(v3(x, y));
     }
 
-    recycleSelf()
+    isOutScreen(x: number, y: number): Boolean
     {
-        EventManager.Instance.createEffect(this.target.position, this.shoterName);
+        let screenWidth = view.getVisibleSize().width;
+        let screenHeight = view.getVisibleSize().height;
+        return x < - screenWidth / 2 - 30 || x > screenWidth / 2 + 30 || y < - screenHeight / 2 - 30 || y > screenHeight / 2 + 30;
+    }
+
+    recycleSelf(needEffect: boolean)
+    {
+        if (needEffect)
+        {
+            EventManager.Instance.createEffect(this.target.position, this.shoterName);
+        }
         let bulletPool = this.node.parent.getComponent(BulletLayer).bulletPools.get(this.id);
         bulletPool.put(this.node);
     }

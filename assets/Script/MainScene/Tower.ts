@@ -19,6 +19,7 @@ export class Tower extends Component implements IObserver {
     attackPoint: Node;//攻击点(玩家手动点击的攻击目标,优先处理攻击点)
     curState: string = 'idle';//当前状态
     isPause: boolean;//是否暂停
+    SpinType:boolean//旋转类型(是否能旋转)
     eventIndex: number = 0;//观察者事件索引
 
     start() {
@@ -32,6 +33,7 @@ export class Tower extends Component implements IObserver {
         this.sellPrice = data.sellprice;
         this.shootSpeed = data.shootSpeed;
         this.attackRange = data.attackrange;
+        this.SpinType = data.SpinType;
         this.node.children[this.level - 1].getComponent(TowerChildren).setActive(true);
         this.isPause = isPaused;
         this.attackPoint = target;
@@ -169,13 +171,12 @@ export class Tower extends Component implements IObserver {
 
     shot()
     {
-        let angle = this.node.children[this.level - 1].angle;
         let target = this.attackPoint;
         if (!this.attackPoint)
         {
             target = this.curAttackTarget;
         }
-        EventManager.Instance.createBullet(this.node.name, this.id, this.level, this.node.position, target, angle);
+        EventManager.Instance.createBullet(this.node.name, this.id, this.level, this.node.position, target);
     }
 
     gameStateChanged(isPaused: boolean)
@@ -212,6 +213,11 @@ export class Tower extends Component implements IObserver {
     {
         if (target)
         {
+            if (!this.SpinType)
+            {
+                this.changeState('shot');
+                return;
+            }
             this.spin(target);
         }
         else
@@ -225,6 +231,11 @@ export class Tower extends Component implements IObserver {
         //由于敌人使用了对象池，当前攻击目标的内存不会被销毁，所以不能通过判断目标是否被销毁的方式来决定是否继续攻击
         if (target.parent)
         {
+            if (!this.SpinType)
+            {
+                this.changeState('shot');
+                return;
+            }
             this.spin(target);
         }
         else
@@ -245,9 +256,7 @@ export class Tower extends Component implements IObserver {
 
         let curAngle = this.normalizeAngle(this.node.children[this.level - 1].angle);
         this.node.children[this.level - 1].angle = this.lerpAngle(curAngle, rotation, 0.15);
-            
-        console.log(this.node.children[this.level - 1].angle, rotation);
-        if (Math.abs(Math.floor(this.node.children[this.level - 1].angle) - Math.floor(rotation) - 1) <= 2)
+        if (Math.abs(Math.floor(this.node.children[this.level - 1].angle) - Math.floor(rotation)) <= 4)
         {
             this.changeState('shot');
         }

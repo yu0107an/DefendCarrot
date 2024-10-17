@@ -12,10 +12,6 @@ export class TowerLayer extends Component {
     @property([Prefab])
     TowerPrefab: Prefab[] = new Array<Prefab>();
 
-    start() {
-
-    }
-
     createTower(id: number, pos: Vec3)
     {
         let tower = instantiate(this.TowerPrefab[id - 1001]);

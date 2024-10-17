@@ -12,6 +12,10 @@ export class CountDown extends Component {
     start() {
         this.countNumber = this.node.getChildByName('Count');
         this.bar = this.node.getChildByName('Bar');
+    }
+
+    init()
+    {
         this.beginSchedule();
     }
 

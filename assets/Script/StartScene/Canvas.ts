@@ -3,8 +3,12 @@ const { ccclass, property } = _decorator;
 
 @ccclass('Canvas')
 export class Canvas extends Component {
-    start() {
+    
+    loading: Node;
 
+    start()
+    {
+        this.loading = this.node.getChildByName('Loading');
     }
 
     replaceScene(event: Event, data: string)
@@ -13,9 +17,14 @@ export class Canvas extends Component {
         this.node.getChildByName(data).active = true;
     }
 
-    update(deltaTime: number) {
-        
+    showLoading()
+    {
+        this.loading.active = true;
+        this.scheduleOnce(() => {
+            this.loading.active = false;
+        }, 0.5);
     }
+
 }
 
 

@@ -87,6 +87,11 @@ export class EnemyLayer extends Component implements IObserver {
         enemy.getComponent(Enemy).reduceHp(atk);
     }
 
+    speedDown_Enemy(enemy: Node, speedBuff: number, shoterName: string)
+    {
+        enemy.getComponent(Enemy).speedDown(speedBuff, shoterName);
+    }
+
     gameStateChanged(isPaused: boolean)
     {
         if (isPaused)

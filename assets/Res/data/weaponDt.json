@@ -5,6 +5,7 @@
 		"shootSpeed":[0.65,0.5,0.35],
 		"createprice":[100,180,260],
 		"sellprice":[80,224,432],
+		"SpinType":true,
 		"icon":"TBottle.png",
 		"shopimg":
 		[
@@ -42,6 +43,7 @@
 		"shootSpeed":[1.1,0.8,0.6],
 		"createprice":[120,220,260],
 		"sellprice":[96,272,480],
+		"SpinType":false,
 		"icon":"TShit.png",
 		"shopimg":
 		[
@@ -78,7 +80,8 @@
 		"shootSpeed":[1.5,1.0,0.65],
 		"createprice":[160,220,260],
 		"sellprice":[128,304,512],
-		"icon":"TLeaf.png",
+		"SpinType":false,
+		"icon":"TFan.png",
 		"shopimg":
 		[
 			"Fan00.png",

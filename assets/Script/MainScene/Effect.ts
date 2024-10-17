@@ -18,15 +18,15 @@ export class Effect extends Component {
         
     }
 
-    reuse(followTarget: Node)
+    reuse(data: Node)
     {
-        if (followTarget[0])
+        if (data[0])
         {
-            this.followTarget = followTarget[0];
+            this.followTarget = data[0];
         }
 
         let animation = this.node.getComponent(Animation);
-        if (animation)
+        if (animation && data[1])
         {
             animation.on(Animation.EventType.LASTFRAME, this.recycleSelf, this);
         }
@@ -40,10 +40,22 @@ export class Effect extends Component {
         }
     }
     
-    recycleSelf()
+    recycleSelf(time?: number)
     {
-        let nodePool = this.node.parent.getComponent(EffectLayer).effectPools.get(this.node.name);
-        nodePool.put(this.node);
+        let destroy = () => {
+            let nodePool = this.node.parent.getComponent(EffectLayer).effectPools.get(this.node.name);
+            nodePool.put(this.node);
+        };
+
+        if (time)
+        {
+            this.unschedule(destroy);
+            this.scheduleOnce(destroy, time);
+        }
+        else
+        {
+            destroy();    
+        }
     }
 
     update(deltaTime: number){

@@ -1,7 +1,8 @@
-import { _decorator, Component, Node, TiledMap, TiledObjectGroup} from 'cc';
+import { _decorator, Component, Node, resources, Sprite, SpriteFrame, TiledMap, TiledMapAsset, TiledObjectGroup} from 'cc';
 import { EventManager } from './EventManager';
 import { struct } from './AStar';
 import { ObstacleInfo } from './ObstacleLayer';
+import { GameInfo } from '../GameInfo';
 const { ccclass, property } = _decorator;
 
 @ccclass('Map')
@@ -11,7 +12,14 @@ export class Map extends Component {
 
     start()
     {
-        this.objects = this.node.getComponent(TiledMap).getObjectGroup('PATH');
+        let path = 'Theme' + GameInfo.theme.toString() + '/BG' + GameInfo.level.toString() + '/';
+        resources.load(path + 'BGPath', TiledMapAsset, (err, tiledMap) => {
+            this.node.getComponent(TiledMap).tmxAsset = tiledMap;
+            this.objects = this.node.getComponent(TiledMap).getObjectGroup('PATH');
+        });
+        resources.load(path + 'BG-hd/spriteFrame', SpriteFrame, (err, sp) => {
+            this.node.getChildByName('Road').getComponent(Sprite).spriteFrame = sp;
+        });
     }
 
     getEnemyPath(): struct[]

@@ -58,9 +58,25 @@ export class EffectLayer extends Component {
                 }
             }
         }
-        let effect = nodePool.get(followTarget);
+        let effect = nodePool.get(followTarget, true);
         this.node.addChild(effect);
         effect.setPosition(pos);
+    }
+
+    setEffect(target: Node, shoterName: string, destroyTime: number)
+    {
+        let effect = this.node.children.find(value => value.getComponent(Effect).followTarget === target);
+        if (effect)
+        {
+            effect.getComponent(Effect).recycleSelf(destroyTime);
+        }
+        else
+        {
+            let nodePool = this.effectPools.get(shoterName.split('T', 2)[1]);
+            effect = nodePool.get(target, false);
+            this.node.addChild(effect);
+            effect.setPosition(target.position);
+        }
     }
 }
 

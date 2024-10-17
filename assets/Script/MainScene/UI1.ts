@@ -1,4 +1,5 @@
-import { _decorator, Color, Component, Graphics, SpriteAtlas, Node, tween, Vec2, Sprite, UIOpacity, v3, Prefab, Vec3, instantiate } from 'cc';
+import { _decorator, Color, Component, Graphics, SpriteAtlas, Node, tween, Sprite, UIOpacity, v3, Prefab, Vec3, instantiate } from 'cc';
+import { StartNode } from './StartNode';
 const { ccclass, property } = _decorator;
 
 @ccclass('UI1')
@@ -13,6 +14,11 @@ export class UI1 extends Component {
 
     start() {
         this.drawTool = this.node.getComponent(Graphics);
+    }
+
+    init(startPos: Vec3, nextPos: Vec3)
+    {
+        this.node.getChildByName('Start').getComponent(StartNode).init(startPos, nextPos);
     }
 
     drawTowerRange(radius: number, pos: Vec3)

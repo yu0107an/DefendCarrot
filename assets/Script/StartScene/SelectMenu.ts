@@ -1,5 +1,6 @@
 import { _decorator, Component, director, Event, find, Node, PageView } from 'cc';
 import { GameInfo } from '../GameInfo';
+import { Canvas } from './Canvas';
 const { ccclass, property } = _decorator;
 
 @ccclass('SelectMenu')
@@ -14,6 +15,7 @@ export class SelectMenu extends Component {
 
     backButton()
     {
+        this.node.parent.getComponent(Canvas).showLoading();
         let themePage = this.node.getChildByName('ThemePage');
         if (themePage.active)
         {
@@ -62,10 +64,6 @@ export class SelectMenu extends Component {
         {
             this.curPageView.scrollToPage(targetPage + 1);
         }
-    }
-
-    update(deltaTime: number) {
-        
     }
 }
 
