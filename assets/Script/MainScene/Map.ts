@@ -3,6 +3,7 @@ import { EventManager } from './EventManager';
 import { struct } from './AStar';
 import { ObstacleInfo } from './ObstacleLayer';
 import { GameInfo } from '../GameInfo';
+import { AudioManager } from './AudioManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Map')
@@ -67,12 +68,14 @@ export class Map extends Component {
                                                                     pos.y >= object.y - object.height);
         if (index === -1)
         {
+            AudioManager.Instance.playAudioById(4);
             EventManager.Instance.createForbiddenNode(pos);
         }
         else
         {
             EventManager.Instance.clickScreen(pos);
         }
+        
     }
 
     protected onDestroy(): void

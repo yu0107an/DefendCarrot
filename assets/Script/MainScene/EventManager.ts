@@ -10,6 +10,7 @@ import { BulletLayer } from './BulletLayer';
 import { EnemyLayer } from './EnemyLayer';
 import { Carrot } from './Carrot';
 import { ObstacleLayer } from './ObstacleLayer';
+import { AudioManager } from './AudioManager';
 const { ccclass, property } = _decorator;
 
 export enum IObserverType
@@ -164,6 +165,7 @@ export class EventManager {
     //清除防御塔范围及升级和销毁按钮
     clearTowerRangeAndInfo()
     {
+        AudioManager.Instance.playAudioById(9);
         this.UI1Ts.clearTowerRange();
         this.UI2Ts.clearTowerInfo();
     }
@@ -185,6 +187,7 @@ export class EventManager {
             {
                 return;
             }
+            AudioManager.Instance.playAudioById(3);
             this.UI1Ts.showSelectNode(pos)
             this.UI2Ts.showChoiceCard(pos);
         }   
@@ -232,6 +235,7 @@ export class EventManager {
     {
         find('Canvas/UI2/ChoiceCard').active = false;
         find('Canvas/UI1/Select').active = false;
+        AudioManager.Instance.playAudioById(9);
     }
 
     //敌人扣血

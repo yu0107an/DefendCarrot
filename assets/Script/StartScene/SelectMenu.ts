@@ -1,6 +1,7 @@
 import { _decorator, Component, director, Event, find, Node, PageView } from 'cc';
 import { GameInfo } from '../GameInfo';
 import { Canvas } from './Canvas';
+import { Audio } from './Audio';
 const { ccclass, property } = _decorator;
 
 @ccclass('SelectMenu')
@@ -29,10 +30,12 @@ export class SelectMenu extends Component {
             this.node.getChildByName('LevelPage0' + this.curTheme).active = false;
             this.node.getChildByName('PlayButton').active = false;
         }
+        Audio.Instance.playSelect();
     }
 
     playButton()
     {
+        Audio.Instance.playSelect();
         GameInfo.theme = this.curTheme;
         GameInfo.level = this.curPageView.curPageIdx + 1;
         director.loadScene('MainScene');
@@ -55,6 +58,7 @@ export class SelectMenu extends Component {
         {
             this.curPageView.scrollToPage(targetPage - 1);
         }
+        Audio.Instance.playSelect();
     }
 
     nextPage()
@@ -64,6 +68,7 @@ export class SelectMenu extends Component {
         {
             this.curPageView.scrollToPage(targetPage + 1);
         }
+        Audio.Instance.playSelect();
     }
 }
 

@@ -1,5 +1,6 @@
 import { _decorator, Component, Node, Animation, SpriteFrame, macro, Sprite, Vec3 } from 'cc';
 import { EventManager } from './EventManager';
+import { AudioManager } from './AudioManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Carrot')
@@ -35,6 +36,9 @@ export class Carrot extends Component {
             this.animation.stop();
             this.animation.play('CarrotClick');
         }
+
+        let index = Math.floor(Math.random() * 2 + 10);
+        AudioManager.Instance.playAudioById(index);
     }
 
     reduceHp(count: number)
@@ -47,6 +51,7 @@ export class Carrot extends Component {
         {
             EventManager.Instance.gameOver();
         }
+        AudioManager.Instance.playAudioById(13);
         this.node.getComponent(Sprite).spriteFrame = this.imgs[this.curHp - 1];
         this.node.getChildByName('Hp').getComponent(Sprite).spriteFrame = this.hps[this.curHp - 1];
     }

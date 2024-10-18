@@ -1,6 +1,7 @@
 import { _decorator, Component, Node, resources, Sprite, SpriteAtlas, SpriteFrame, v3} from 'cc';
 import { ChoiceCard } from './ChoiceCard';
 import { EventManager } from './EventManager';
+import { AudioManager } from './AudioManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Card')
@@ -56,6 +57,7 @@ export class Card extends Component {
         EventManager.Instance.disableSelect();
         event.propagationStopped = true;
         EventManager.Instance.createEffect(v3(pos.x - 480, pos.y - 320), 'Air');
+        AudioManager.Instance.playAudioById(8);
     }
 
     protected onDestroy(): void {

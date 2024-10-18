@@ -1,4 +1,5 @@
 import { _decorator, Component, Event, Node } from 'cc';
+import { Audio } from './Audio';
 const { ccclass, property } = _decorator;
 
 @ccclass('Canvas')
@@ -15,6 +16,7 @@ export class Canvas extends Component {
     {
         event.target.parent.active = false;
         this.node.getChildByName(data).active = true;
+        Audio.Instance.playSelect();
     }
 
     showLoading()

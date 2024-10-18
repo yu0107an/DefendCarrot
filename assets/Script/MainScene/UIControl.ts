@@ -4,7 +4,7 @@ import { ChoiceCard } from './ChoiceCard';
 import { AttackPoint } from './AttackPoint';
 import { GameInfo } from '../GameInfo';
 import { CountDown } from './CountDown';
-import { Carrot } from './Carrot';
+import { AudioManager } from './AudioManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIControl')
@@ -12,7 +12,6 @@ export class UIControl extends Component implements IObserver {
 
     @property(SpriteAtlas)
     atlas: SpriteAtlas;
-    
     @property(Prefab)
     attackPointPrefab: Prefab;
     attackPoint: Node;
@@ -73,7 +72,7 @@ export class UIControl extends Component implements IObserver {
 
     changeMenuButton(event: Event)
     {
-        let menuNode = this.node.getChildByPath('UP/Menu/MenuPage');
+        let menuNode = this.node.getChildByName('MenuPage');
         menuNode.active = !menuNode.active;
         this.isMenuOpen = !this.isMenuOpen;
         let prePauseState = !this.node.getChildByPath('UP/PauseButton').children[0].active;
@@ -85,6 +84,8 @@ export class UIControl extends Component implements IObserver {
         {
             EventManager.Instance.pauseGame(prePauseState);
         }
+        event.propagationStopped = true;
+        AudioManager.Instance.playAudioById(17);
     }
 
     changeWaveLabel(wave: number)
@@ -115,7 +116,7 @@ export class UIControl extends Component implements IObserver {
                 EventManager.Instance.pauseGame(!value.active);
             }
         })
-        
+        AudioManager.Instance.playAudioById(17);
     }
 
     changeSpeed(event, data)
@@ -127,6 +128,7 @@ export class UIControl extends Component implements IObserver {
         speed.children[curSpeed - 1].active = false;
         speed.children[targetSpeed - 1].active = true;
         EventManager.Instance.setGameSpeed(targetSpeed);
+        AudioManager.Instance.playAudioById(17);
     }
 
     drawTowerInfo(pos: Vec3, upgradePrice: string, sellPrice: string, func: any)
@@ -157,6 +159,7 @@ export class UIControl extends Component implements IObserver {
                     EventManager.Instance.clearTowerRangeAndInfo();
                     func('upgrade');
                     EventManager.Instance.createEffect(pos, 'Air');
+                    AudioManager.Instance.playAudioById(7);
                 }
             });
         }
@@ -180,6 +183,7 @@ export class UIControl extends Component implements IObserver {
             this.clearTowerInfo();
             func('sell');
             EventManager.Instance.createEffect(pos, 'Air');
+            AudioManager.Instance.playAudioById(6);
         })
         this.sellNode.setPosition(v3(pos.x, pos.y - 80));
     }
@@ -232,6 +236,7 @@ export class UIControl extends Component implements IObserver {
             attackPointTs.target = null;
         }
         attackPointTs.target = target;
+        AudioManager.Instance.playAudioById(5);
     }
 
     cancelAttackPoint()

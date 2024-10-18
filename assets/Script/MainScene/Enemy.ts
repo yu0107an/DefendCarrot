@@ -2,6 +2,7 @@ import { _decorator, Collider2D, Component, Contact2DType, IPhysics2DContact, No
 import { EnemyLayer } from './EnemyLayer';
 import { struct } from './AStar';
 import { EventManager, IObserverType } from './EventManager';
+import { AudioManager } from './AudioManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Enemy')
@@ -169,6 +170,9 @@ export class Enemy extends Component implements IObserver {
         EventManager.Instance.createEffect(this.node.position, 'Air');
         let enemyPool = this.node.parent.getComponent(EnemyLayer).enemyPools.get(this.node.name);
         enemyPool.put(this.node);
+
+        let index = Math.floor(Math.random() * 3 + 14);
+        AudioManager.Instance.playAudioById(index);
     }
 
     protected onDestroy(): void {

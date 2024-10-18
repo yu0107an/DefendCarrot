@@ -12,8 +12,12 @@ export class Game extends Component {
     isPaused: boolean = false;//是否暂停
     coin: number;//金币数
     gameState_Observers: IObserver[] = new Array<IObserver>();
-    gameCoin_Observers: IObserver[] =new Array<IObserver>();
+    gameCoin_Observers: IObserver[] = new Array<IObserver>();
     oldTick = director.tick;
+
+    protected onLoad(): void {
+        EventManager.resetInstance();
+    }
 
     start()
     {
@@ -27,6 +31,7 @@ export class Game extends Component {
 
     initLevel()
     {
+        
         EventManager.Instance.showLoading();
         this.scheduleOnce(() => {
             this.coin = 0;
@@ -64,7 +69,6 @@ export class Game extends Component {
     {
         director.tick = this.oldTick;
         EventManager.Instance.clearAllObserver();
-        EventManager.resetInstance();
         director.loadScene('MainScene');
     }
 

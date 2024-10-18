@@ -1,5 +1,6 @@
 import { _decorator, Component, Node, tween, v3 } from 'cc';
 import { EventManager } from './EventManager';
+import { AudioManager } from './AudioManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('CountDown')
@@ -9,7 +10,8 @@ export class CountDown extends Component {
     count: number = 0;
     bar: Node;
     
-    start() {
+    start()
+    {
         this.countNumber = this.node.getChildByName('Count');
         this.bar = this.node.getChildByName('Bar');
     }
@@ -21,6 +23,7 @@ export class CountDown extends Component {
 
     beginSchedule()
     {
+        AudioManager.Instance.playAudioById(1);
         this.schedule(() => {
             this.countNumber.children[this.count].active = false;
             this.count += 1;
@@ -36,11 +39,17 @@ export class CountDown extends Component {
                         EventManager.Instance.createEnemy();
                     })
                     .start();
+                AudioManager.Instance.playAudioById(2);
+            }
+            else
+            {
+                AudioManager.Instance.playAudioById(1);
             }
         }, 1, 2, 0);
     }
 
-    update(deltaTime: number) {
+    update(deltaTime: number)
+    {
         this.bar.angle += Math.PI / 1.5;
     }
 }

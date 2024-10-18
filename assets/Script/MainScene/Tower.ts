@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, v2, Animation, Vec3 } from 'cc';
+import { _decorator, Component, Node, v2, Animation, Vec3, AudioSource } from 'cc';
 import { EventManager, IObserverType } from './EventManager';
 import { TowerChildren } from './TowerChildren';
 import { PriorityQueue } from '../PriorityQueue';
@@ -22,8 +22,11 @@ export class Tower extends Component implements IObserver {
     SpinType:boolean//旋转类型(是否能旋转)
     eventIndex: number = 0;//观察者事件索引
 
+    audio: AudioSource;
+
     start() {
         this.node.on(Node.EventType.TOUCH_END, this.click, this);
+        this.audio = this.node.getComponent(AudioSource);
     }
 
     init(data: any, isPaused: boolean, target: Node)
@@ -177,6 +180,7 @@ export class Tower extends Component implements IObserver {
             target = this.curAttackTarget;
         }
         EventManager.Instance.createBullet(this.node.name, this.id, this.level, this.node.position, target);
+        this.audio.play();
     }
 
     gameStateChanged(isPaused: boolean)
