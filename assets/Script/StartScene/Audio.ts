@@ -1,4 +1,5 @@
 import { _decorator, AudioSource, Component, Node } from 'cc';
+import { GameInfo } from '../GameInfo';
 const { ccclass, property } = _decorator;
 
 @ccclass('Audio')
@@ -38,6 +39,18 @@ export class Audio extends Component {
     playSelect()
     {
         this.select.play();
+    }
+
+    setVolume(type: string)
+    {
+        if (type === 'Bgm')
+        {
+            this.bgm.volume = Number(GameInfo.bgm);
+        }
+        else if(type === 'Se')
+        {
+            this.select.volume = Number(GameInfo.se);
+        }
     }
 
 }

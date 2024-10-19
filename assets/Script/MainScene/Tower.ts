@@ -2,12 +2,14 @@ import { _decorator, Component, Node, v2, Animation, Vec3, AudioSource } from 'c
 import { EventManager, IObserverType } from './EventManager';
 import { TowerChildren } from './TowerChildren';
 import { PriorityQueue } from '../PriorityQueue';
+import { AudioManager } from './AudioManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Tower')
 export class Tower extends Component implements IObserver {
     
     id: number;
+    audioId: number;
     level: number = 1;//等级
     createPrice: number[];//创建或升级花费
     sellPrice: number[];//卖塔所得费用
@@ -22,16 +24,14 @@ export class Tower extends Component implements IObserver {
     SpinType:boolean//旋转类型(是否能旋转)
     eventIndex: number = 0;//观察者事件索引
 
-    audio: AudioSource;
-
     start() {
         this.node.on(Node.EventType.TOUCH_END, this.click, this);
-        this.audio = this.node.getComponent(AudioSource);
     }
 
     init(data: any, isPaused: boolean, target: Node)
     {
         this.id = data.weaponID;
+        this.audioId = data.audioId;
         this.createPrice = data.createprice;
         this.sellPrice = data.sellprice;
         this.shootSpeed = data.shootSpeed;
@@ -180,7 +180,7 @@ export class Tower extends Component implements IObserver {
             target = this.curAttackTarget;
         }
         EventManager.Instance.createBullet(this.node.name, this.id, this.level, this.node.position, target);
-        this.audio.play();
+        AudioManager.Instance.playAudioById(this.audioId);
     }
 
     gameStateChanged(isPaused: boolean)

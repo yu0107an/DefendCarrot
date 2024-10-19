@@ -6,16 +6,25 @@ const { ccclass, property } = _decorator;
 export class Canvas extends Component {
     
     loading: Node;
+    setting: Node;
 
     start()
     {
         this.loading = this.node.getChildByName('Loading');
+        this.setting = this.node.getChildByName('Setting');
     }
 
     replaceScene(event: Event, data: string)
     {
         event.target.parent.active = false;
         this.node.getChildByName(data).active = true;
+        Audio.Instance.playSelect();
+    }
+
+    showSetting(event: Event)
+    {
+        event.target.parent.active = false;
+        this.setting.active = true;
         Audio.Instance.playSelect();
     }
 

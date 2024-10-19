@@ -6,6 +6,7 @@
 		"createprice":[100,180,260],
 		"sellprice":[80,224,432],
 		"SpinType":true,
+		"audioId":18,
 		"icon":"TBottle.png",
 		"shopimg":
 		[
@@ -44,6 +45,7 @@
 		"createprice":[120,220,260],
 		"sellprice":[96,272,480],
 		"SpinType":false,
+		"audioId":19,
 		"icon":"TShit.png",
 		"shopimg":
 		[
