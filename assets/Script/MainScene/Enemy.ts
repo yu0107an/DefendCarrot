@@ -60,7 +60,7 @@ export class Enemy extends Component implements IObserver {
         if (other.group === 16)
         {
             EventManager.Instance.reduceHp_Carrot(1);
-            this.recycleSelf();
+            this.recycleSelf(false);
         }
     }
 
@@ -114,7 +114,8 @@ export class Enemy extends Component implements IObserver {
             EventManager.Instance.createEffect(this.node.position, 'Money', null, this.reward);
             EventManager.Instance.changeCoin(this.reward);
             this.curMove.stop();
-            this.recycleSelf();
+            this.recycleSelf(true);
+            return;
         }
         let percent = this.curHp / this.maxHp;
         this.hpBar.progress = percent;
@@ -161,7 +162,7 @@ export class Enemy extends Component implements IObserver {
             .start();
     }
 
-    recycleSelf()
+    recycleSelf(needMusic: boolean)
     {
         if (this.node.parent.children.length === 1)
         {
@@ -171,11 +172,15 @@ export class Enemy extends Component implements IObserver {
         let enemyPool = this.node.parent.getComponent(EnemyLayer).enemyPools.get(this.node.name);
         enemyPool.put(this.node);
 
-        let index = Math.floor(Math.random() * 3 + 14);
-        AudioManager.Instance.playAudioById(index);
+        if (needMusic)
+        {
+            let index = Math.floor(Math.random() * 3 + 14);
+            AudioManager.Instance.playAudioById(index);
+        }
     }
 
-    protected onDestroy(): void {
+    onDestroy()
+    {
         this.node.off(Node.EventType.TOUCH_END);
     }
 }

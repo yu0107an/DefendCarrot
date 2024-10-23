@@ -15,7 +15,8 @@ export class Game extends Component {
     gameCoin_Observers: IObserver[] = new Array<IObserver>();
     oldTick = director.tick;
 
-    protected onLoad(): void {
+    onLoad()
+    {
         EventManager.resetInstance();
     }
 
@@ -31,7 +32,6 @@ export class Game extends Component {
 
     initLevel()
     {
-        
         EventManager.Instance.showLoading();
         this.scheduleOnce(() => {
             this.coin = 0;
@@ -67,23 +67,34 @@ export class Game extends Component {
 
     restartGame()
     {
-        director.tick = this.oldTick;
         EventManager.Instance.clearAllObserver();
+        director.tick = this.oldTick;
+        director.resume();
         director.loadScene('MainScene');
     }
 
     quitGame()
     {
         EventManager.Instance.clearAllObserver();
-        EventManager.resetInstance();
+        director.tick = this.oldTick;
+        director.resume();
         director.loadScene('MenuScene');
     }
     
+    nextGame()
+    {
+        GameInfo.level += 1;
+        EventManager.Instance.clearAllObserver();
+        director.tick = this.oldTick;
+        director.resume();
+        director.loadScene('MainScene');
+    }
+
     onDestroy() {
         //切换场景必须重置，不然报错
-        if (this.oldTick) {
-            director.tick = this.oldTick;
-        }
+        // if (this.oldTick) {
+        //     director.tick = this.oldTick;
+        // }
     }
     
 }

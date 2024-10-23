@@ -18,7 +18,7 @@ export class Audio extends Component {
     {
         if (Audio.instance === null)
         {
-            Audio.instance = new Audio();
+            Audio.instance = new Audio;
         }
         return Audio.instance;
     }

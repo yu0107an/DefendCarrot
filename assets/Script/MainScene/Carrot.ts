@@ -14,7 +14,8 @@ export class Carrot extends Component {
     animation: Animation;
     sch: any;
 
-    start() {
+    init()
+    {
         this.animation = this.getComponent(Animation);
         this.sch = this.schedule(() => {
             if (!this.animation.getState('CarrotClick').isPlaying && this.curHp === 10)
@@ -36,7 +37,6 @@ export class Carrot extends Component {
             this.animation.stop();
             this.animation.play('CarrotClick');
         }
-
         let index = Math.floor(Math.random() * 2 + 10);
         AudioManager.Instance.playAudioById(index);
     }
@@ -45,7 +45,6 @@ export class Carrot extends Component {
     {
         this.animation.stop();
         this.unschedule(this.sch);
-        this.node.off(Node.EventType.TOUCH_START);
         this.curHp -= count;
         if (this.curHp <= 0)
         {
@@ -54,9 +53,12 @@ export class Carrot extends Component {
         AudioManager.Instance.playAudioById(13);
         this.node.getComponent(Sprite).spriteFrame = this.imgs[this.curHp - 1];
         this.node.getChildByName('Hp').getComponent(Sprite).spriteFrame = this.hps[this.curHp - 1];
+
+        this.node.off(Node.EventType.TOUCH_START);
     }
 
-    protected onDestroy(): void {
+    onDestroy()
+    {
         this.node.off(Node.EventType.TOUCH_START);
     }
 

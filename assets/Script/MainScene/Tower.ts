@@ -82,7 +82,7 @@ export class Tower extends Component implements IObserver {
     }
 
     //当敌人进入或离开自身范围时调用
-    changeAttackNumber(isAdd: boolean, target?: Node)
+    changeAttackNumber(isAdd: boolean, target: Node)
     {
         if (isAdd)
         {
@@ -95,18 +95,7 @@ export class Tower extends Component implements IObserver {
         }
         else
         {
-            if (target)
-            {
-                this.attackTarget_Enemy.splice(this.attackTarget_Enemy.findIndex(target), 1);
-            }
-            else
-            {
-                if (this.attackTarget_Enemy[0] === EventManager.Instance.getAttackPoint())
-                {
-                    this.attackPoint = null;
-                }
-                this.attackTarget_Enemy.shift();
-            }
+            this.attackTarget_Enemy.splice(this.attackTarget_Enemy.findIndex(target), 1);
             this.changeState('idle');
         }
         this.curAttackTarget = this.attackTarget_Enemy.get(0);
@@ -207,10 +196,7 @@ export class Tower extends Component implements IObserver {
             target = this.curAttackTarget;
             this.update_attackTarget(target);
         }
-        else
-        {
-            this.changeAttackNumber(false);
-        }
+        
     }
 
     update_attackPoint(target: Node)
@@ -244,7 +230,7 @@ export class Tower extends Component implements IObserver {
         }
         else
         {
-            this.changeAttackNumber(false);
+            this.changeAttackNumber(false, target);
         }
     }
 

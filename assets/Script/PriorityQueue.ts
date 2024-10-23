@@ -79,11 +79,11 @@ export class PriorityQueue extends Component
         }
         else if (curNode.curPath === targetNode.curPath)
         {
-            let x1 = Math.abs(curNode.node.position.x - curNode.path[curNode.curPath + 1].x);
-            let y1 = Math.abs(curNode.node.position.y - curNode.path[curNode.curPath + 1].y);
+            let x1 = Math.abs(curNode.node.position.x + 480 - curNode.path[curNode.curPath + 1].x);
+            let y1 = Math.abs(curNode.node.position.y + 320 - curNode.path[curNode.curPath + 1].y);
 
-            let x2 = Math.abs(targetNode.node.position.x - targetNode.path[targetNode.curPath + 1].x);
-            let y2 = Math.abs(targetNode.node.position.y - targetNode.path[targetNode.curPath + 1].y);
+            let x2 = Math.abs(targetNode.node.position.x + 480 - targetNode.path[targetNode.curPath + 1].x);
+            let y2 = Math.abs(targetNode.node.position.y + 320 - targetNode.path[targetNode.curPath + 1].y);
             return x1 + y1 < x2 + y2;
         }
         else
@@ -93,5 +93,3 @@ export class PriorityQueue extends Component
         
     }
 }
-
-

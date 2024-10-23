@@ -9,16 +9,21 @@ export class UI1 extends Component {
     atlas: SpriteAtlas;
     @property(Prefab)
     selectPrefab: Prefab;
+    @property(Prefab)
+    startPrefab: Prefab;
     selectNode: Node;
     drawTool: Graphics;
 
-    start() {
+    start()
+    {
         this.drawTool = this.node.getComponent(Graphics);
     }
 
     init(startPos: Vec3, nextPos: Vec3)
     {
-        this.node.getChildByName('Start').getComponent(StartNode).init(startPos, nextPos);
+        let startNode = instantiate(this.startPrefab);
+        this.node.addChild(startNode);
+        startNode.getComponent(StartNode).init(startPos, nextPos);
     }
 
     drawTowerRange(radius: number, pos: Vec3)

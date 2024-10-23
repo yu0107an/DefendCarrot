@@ -58,7 +58,8 @@ export class Effect extends Component {
         }
     }
 
-    update(deltaTime: number){
+    update(deltaTime: number)
+    {
         if (this.followTarget)
         {
             if (this.followTarget.parent)

@@ -8,7 +8,6 @@ import { ChoiceCard } from './ChoiceCard';
 import { TowerLayer } from './TowerLayer';
 import { BulletLayer } from './BulletLayer';
 import { EnemyLayer } from './EnemyLayer';
-import { Carrot } from './Carrot';
 import { ObstacleLayer } from './ObstacleLayer';
 import { AudioManager } from './AudioManager';
 const { ccclass, property } = _decorator;
@@ -32,12 +31,11 @@ export class EventManager {
     private towerLayerTs: TowerLayer;
     private bulletLayerTs: BulletLayer;
     private obstacleLayerTs: ObstacleLayer;
-    private carrotTs: Carrot;
     eventIndex: number = 1;
 
     private constructor() { };
 
-    static get Instance()
+    public static get Instance()
     {
         if (!this.instance)
         {
@@ -63,7 +61,6 @@ export class EventManager {
         this.towerLayerTs = find('Canvas/Game/TowerLayer').getComponent(TowerLayer);
         this.bulletLayerTs = find('Canvas/Game/BulletLayer').getComponent(BulletLayer);
         this.obstacleLayerTs = find('Canvas/Game/ObstacleLayer').getComponent(ObstacleLayer);
-        this.carrotTs = find('Canvas/UI2/Carrot').getComponent(Carrot);
     }
 
     //添加观察关系
@@ -126,6 +123,18 @@ export class EventManager {
         this.UI2Ts.showLoading();
     }
     
+    //展示最后一波的图片
+    showFinalWave()
+    {
+        this.UI2Ts.showFinalWave();
+    }
+
+    //展示障碍物全部清除的图片
+    showObstacleClear()
+    {
+        this.UI2Ts.showObstacleClear();
+    }
+
     //初始化关卡数据(关卡开始时使用)
     initLevelData(weaponDt: any, monsterDt: any, waveDt: any)
     {
@@ -199,17 +208,16 @@ export class EventManager {
         this.UI1Ts.createForbiddenNode(pos);
     }
 
-    //开启UI和Carrot点击按钮
+    //开启地图点击
     enableClick()
     {
         this.mapTs.enableClick();
-        this.carrotTs.enableClick();
     }
 
-    //关闭UI和Carrot点击按钮
+    //开启UI点击按钮
     enableUIButton()
     {
-        this.UI2Ts.enableAllButton();
+        this.UI2Ts.enableUpButton();
     }
 
     //开始创建敌人(一关只调用一次)
@@ -253,7 +261,7 @@ export class EventManager {
     //Carrot扣血
     reduceHp_Carrot(count: number)
     {
-        this.carrotTs.reduceHp(count);
+        this.UI2Ts.reduceHp_Carrot(count);
     }
 
     //障碍物扣血
@@ -282,10 +290,19 @@ export class EventManager {
         return this.UI2Ts.getAttackPoint();
     }
 
-    //游戏失败调用
+    //游戏失败
     gameOver()
     {
         this.UI2Ts.showGameOver();
+        this.UI2Ts.disableUpButton();
+        director.pause();
+    }
+
+    //游戏通关
+    gameWin()
+    {
+        this.UI2Ts.showGameWin();
+        this.UI2Ts.disableUpButton();
         director.pause();
     }
 

@@ -3,8 +3,8 @@ import { GameInfo } from '../GameInfo';
 import { Audio } from './Audio';
 const { ccclass, property } = _decorator;
 
-@ccclass('SettingMenu')
-export class SettingMenu extends Component {
+@ccclass('OPtion')
+export class Option extends Component {
 
     bgmButton: Node;
     seButton: Node;

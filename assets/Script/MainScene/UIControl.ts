@@ -1,10 +1,11 @@
-import { _decorator, Component, Node, Event, Label, SpriteAtlas, Sprite, v3, Prefab, instantiate, Button, Vec3 } from 'cc';
+import { _decorator, Component, Node, Event, Label, SpriteAtlas, Sprite, v3, Prefab, instantiate, Button, Vec3, tween } from 'cc';
 import { EventManager, IObserverType } from './EventManager';
 import { ChoiceCard } from './ChoiceCard';
 import { AttackPoint } from './AttackPoint';
 import { GameInfo } from '../GameInfo';
 import { CountDown } from './CountDown';
 import { AudioManager } from './AudioManager';
+import { Carrot } from './Carrot';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIControl')
@@ -14,6 +15,8 @@ export class UIControl extends Component implements IObserver {
     atlas: SpriteAtlas;
     @property(Prefab)
     attackPointPrefab: Prefab;
+    @property(Prefab)
+    carrotPrefab: Prefab;
     attackPoint: Node;
     choiceCard: Node;
     isMenuOpen: boolean = false;
@@ -22,19 +25,24 @@ export class UIControl extends Component implements IObserver {
     sellNode: Node;
     coin: Node;
 
-    onLoad() {
+    onLoad()
+    {
         EventManager.Instance.addObserver(this, IObserverType.Coin);
         this.coin = this.node.getChildByPath('UP/Coin');
     }
 
     init(carrotPos: Vec3)
     {
-        this.node.getChildByPath('UP/AllWave').getComponent(Label).string = GameInfo.maxWave.toString();
+        this.node.getChildByPath('UP/WaveCount/AllWave').getComponent(Label).string = GameInfo.maxWave.toString();
         this.choiceCard = this.node.getChildByName('ChoiceCard');
-        this.disableAllButton();
+        this.disableUpButton();
 
         this.node.getChildByName('CountDown').getComponent(CountDown).init();
-        this.node.getChildByName('Carrot').setPosition(carrotPos.x - 480, carrotPos.y - 320);
+
+        let carrot = instantiate(this.carrotPrefab);
+        this.node.addChild(carrot);
+        carrot.setPosition(carrotPos.x - 480, carrotPos.y - 320);
+        this.node.getChildByName('Carrot').getComponent(Carrot).init();
     }
     
     showLoading()
@@ -45,29 +53,86 @@ export class UIControl extends Component implements IObserver {
         }, 0.8);
     }
 
-    disableAllButton()
+    disableUpButton()
     {
-        this.node.getComponentsInChildren(Button).forEach((value) => {
+        this.node.getChildByName('UP').getComponentsInChildren(Button).forEach((value) => {
             value.interactable = false;
         })
     }
 
-    enableAllButton()
+    enableUpButton()
     {
-        this.node.getComponentsInChildren(Button).forEach((value) => {
+        this.node.getChildByName('UP').getComponentsInChildren(Button).forEach((value) => {
             value.interactable = true;
         })
+        this.node.getChildByName('Carrot').getComponent(Carrot).enableClick();
+    }
+
+    reduceHp_Carrot(count: number)
+    {
+        this.node.getChildByName('Carrot').getComponent(Carrot).reduceHp(count);
     }
 
     showGameOver()
     {
         let gameOverNode = this.node.getChildByName('GameOver');
         gameOverNode.active = true;
-        let curWave = this.node.getChildByPath('UP/CurWave').getComponent(Label).string;
-        let allWave = this.node.getChildByPath('UP/AllWave').getComponent(Label).string;
+        let curWave = this.node.getChildByPath('UP/WaveCount/CurWave').getComponent(Label).string;
+        let allWave = this.node.getChildByPath('UP/WaveCount/AllWave').getComponent(Label).string;
         gameOverNode.getChildByName('CurWave').getComponent(Label).string = curWave;
         gameOverNode.getChildByName('AllWave').getComponent(Label).string = allWave;
         gameOverNode.getChildByName('CurLevel').getComponent(Label).string = GameInfo.level.toString();
+    }
+
+    showGameWin()
+    {
+        let gameWinNode = this.node.getChildByName('GameWin');
+        gameWinNode.active = true;
+        let curWave = this.node.getChildByPath('UP/WaveCount/CurWave').getComponent(Label).string;
+        let allWave = this.node.getChildByPath('UP/WaveCount/AllWave').getComponent(Label).string;
+        gameWinNode.getChildByName('CurWave').getComponent(Label).string = curWave;
+        gameWinNode.getChildByName('AllWave').getComponent(Label).string = allWave;
+        gameWinNode.getChildByName('CurLevel').getComponent(Label).string = GameInfo.level.toString();
+    }
+
+    showFinalWave()
+    {
+        let finalWave = this.node.getChildByName('FinalWave');
+        finalWave.active = true;
+        finalWave.setPosition(v3(0, 350))
+        tween(finalWave)
+            .by(1, { position: v3(0, -200) })
+            .call(() => {
+                this.scheduleOnce(() => {
+                    tween(finalWave)
+                        .by(1, { position: v3(0, 200) })
+                        .call(() => { finalWave.active = false; })
+                        .start();
+                }, 1.5);
+            })
+            .start();
+        
+        
+    }
+
+    showObstacleClear()
+    {
+        let obstacleClear = this.node.getChildByName('ObstacleClear');
+        obstacleClear.active = true;
+        obstacleClear.setPosition(v3(0, -350))
+        tween(obstacleClear)
+            .by(1, { position: v3(0, 100) })
+            .call(() => {
+                this.scheduleOnce(() => {
+                    tween(obstacleClear)
+                        .by(1, { position: v3(0, -100) })
+                        .call(() => { obstacleClear.active = false; })
+                        .start();
+                }, 1.5)
+            })
+            .start();
+        
+        
     }
 
     changeMenuButton(event: Event)
@@ -97,9 +162,9 @@ export class UIControl extends Component implements IObserver {
         }
         else
         {
-            str = (wave / 10).toString() + '  ' + (wave % 10).toString();
+            str = Math.floor((wave / 10)).toString() + '  ' + (wave % 10).toString();
         }
-        this.node.getChildByPath('UP/CurWave').getComponent(Label).string = str;
+        this.node.getChildByPath('UP/WaveCount/CurWave').getComponent(Label).string = str;
     }
 
     pauseGameButton()
@@ -117,6 +182,11 @@ export class UIControl extends Component implements IObserver {
             }
         })
         AudioManager.Instance.playAudioById(17);
+
+        let waveCount = this.node.getChildByPath('UP/WaveCount');
+        waveCount.active = !waveCount.active;
+        let menuCenter = this.node.getChildByPath('UP/MenuCenter');
+        menuCenter.active = !menuCenter.active;
     }
 
     changeSpeed(event, data)
@@ -271,14 +341,13 @@ export class UIControl extends Component implements IObserver {
         this.coin.getComponent(Label).string = coinNumber.toString();
     }
 
-    protected onDestroy(): void {
-        if (this.upgradeNode && this.sellNode)
-        {
-            this.upgradeNode.off(Node.EventType.TOUCH_END);
-            this.sellNode.off(Node.EventType.TOUCH_END);
-        }
+    onDestroy()
+    {
+        // if (this.upgradeNode && this.sellNode)
+        // {
+        //     this.upgradeNode.off(Node.EventType.TOUCH_END);
+        //     this.sellNode.off(Node.EventType.TOUCH_END);
+        // }
     }
     
 }
-
-

@@ -2,6 +2,7 @@ import { _decorator, Component, instantiate, JsonAsset, Node, NodePool, Prefab, 
 import { Enemy } from './Enemy';
 import { struct } from './AStar';
 import { EventManager, IObserverType } from './EventManager';
+import { GameInfo } from '../GameInfo';
 const { ccclass, property } = _decorator;
 
 @ccclass('EnemyLayer')
@@ -14,15 +15,11 @@ export class EnemyLayer extends Component implements IObserver {
     enemyPrefab: Prefab[] = new Array<Prefab>();
     curWave: number = 0;
     monsterId: any;
-    waveDt: any;
+    eachWaveDt: any;
     path: Array<struct>;
     enemyCount: number = 0;
     eventIndex: number = 0;
     curWaveFinish: boolean = true;
-
-    start() {
-        
-    }
 
     init(monsterId: any, waveDt: any, path: struct[])
     {
@@ -39,8 +36,10 @@ export class EnemyLayer extends Component implements IObserver {
             this.enemyPools.set(prefab.name, enemyPool);
         })
         this.monsterId = monsterId;
-        this.waveDt = waveDt;
+        this.eachWaveDt = waveDt;
         EventManager.Instance.addObserver(this, IObserverType.GameState);
+
+        console.log(this.path);
     }
 
     //创建一波敌人
@@ -50,10 +49,19 @@ export class EnemyLayer extends Component implements IObserver {
         {
             return;
         }
+        if (this.curWave === GameInfo.maxWave)
+        {
+            EventManager.Instance.gameWin();
+            return;
+        }
         this.curWave += 1;
+        if (this.curWave === GameInfo.maxWave)
+        {
+            EventManager.Instance.showFinalWave();
+        }
         EventManager.Instance.changeWaveLabel(this.curWave);
         this.curWaveFinish = false;
-        let totalEnemies = this.waveDt[this.curWave - 1];
+        let totalEnemies = this.eachWaveDt[this.curWave - 1];
         this.enemyCount = 0;
         this.schedule(this.createEnemyTimer, 0.8, totalEnemies - this.enemyCount - 1, 2);
     }
@@ -73,10 +81,10 @@ export class EnemyLayer extends Component implements IObserver {
             newEnemy = instantiate(this.enemyPrefab[monsterId]);
         }
         this.node.addChild(newEnemy);
-        EventManager.Instance.createEffect(v3(-360, 120), 'Appear', newEnemy);
+        EventManager.Instance.createEffect(v3(this.path[0].x, this.path[0].y), 'Appear', newEnemy);
         this.enemyCount += 1;
         //当前波次出怪完成
-        if (this.enemyCount === this.waveDt[this.curWave - 1])
+        if (this.enemyCount === this.eachWaveDt[this.curWave - 1])
         {
             this.curWaveFinish = true;
         }
@@ -116,7 +124,7 @@ export class EnemyLayer extends Component implements IObserver {
     {
         if (!this.curWaveFinish)
         {
-            let totalEnemies = this.waveDt[this.curWave - 1];
+            let totalEnemies = this.eachWaveDt[this.curWave - 1];
             this.schedule(this.createEnemyTimer, 0.8, totalEnemies - this.enemyCount - 1, 0);
         }
     }

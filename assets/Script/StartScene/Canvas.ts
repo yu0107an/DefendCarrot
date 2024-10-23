@@ -7,11 +7,13 @@ export class Canvas extends Component {
     
     loading: Node;
     setting: Node;
+    help: Node;
 
     start()
     {
         this.loading = this.node.getChildByName('Loading');
-        this.setting = this.node.getChildByName('Setting');
+        this.setting = this.node.getChildByName('Option');
+        this.help = this.node.getChildByName('Help');
     }
 
     replaceScene(event: Event, data: string)
@@ -25,6 +27,13 @@ export class Canvas extends Component {
     {
         event.target.parent.active = false;
         this.setting.active = true;
+        Audio.Instance.playSelect();
+    }
+
+    showHelp(event: Event)
+    {
+        event.target.parent.active = false;
+        this.help.active = true;
         Audio.Instance.playSelect();
     }
 

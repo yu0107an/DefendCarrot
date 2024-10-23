@@ -51,8 +51,12 @@ export class Obstacle extends Component {
         this.node.children[0].children[0].getComponent(ProgressBar).progress = percent;
     }
 
-    protected onDestroy(): void
+    onDestroy()
     {
+        if (this.node.parent.children.length === 0)
+        {
+            EventManager.Instance.showObstacleClear();
+        }
         this.node.off(Node.EventType.TOUCH_END, this.click, this);
     }
 }
