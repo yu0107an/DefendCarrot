@@ -38,8 +38,6 @@ export class EnemyLayer extends Component implements IObserver {
         this.monsterId = monsterId;
         this.eachWaveDt = waveDt;
         EventManager.Instance.addObserver(this, IObserverType.GameState);
-
-        console.log(this.path);
     }
 
     //创建一波敌人
@@ -81,7 +79,7 @@ export class EnemyLayer extends Component implements IObserver {
             newEnemy = instantiate(this.enemyPrefab[monsterId]);
         }
         this.node.addChild(newEnemy);
-        EventManager.Instance.createEffect(v3(this.path[0].x, this.path[0].y), 'Appear', newEnemy);
+        EventManager.Instance.createEffect(v3(this.path[0].x, this.path[0].y), 'Appear', true, newEnemy);
         this.enemyCount += 1;
         //当前波次出怪完成
         if (this.enemyCount === this.eachWaveDt[this.curWave - 1])

@@ -111,7 +111,7 @@ export class Enemy extends Component implements IObserver {
         this.curHp -= atk;
         if (this.curHp <= 0)
         {
-            EventManager.Instance.createEffect(this.node.position, 'Money', null, this.reward);
+            EventManager.Instance.createEffect(this.node.position, 'Money', true, null, this.reward);
             EventManager.Instance.changeCoin(this.reward);
             this.curMove.stop();
             this.recycleSelf(true);
@@ -168,7 +168,7 @@ export class Enemy extends Component implements IObserver {
         {
             this.node.parent.getComponent(EnemyLayer).createEnemy();
         }
-        EventManager.Instance.createEffect(this.node.position, 'Air');
+        EventManager.Instance.createEffect(this.node.position, 'Air', true);
         let enemyPool = this.node.parent.getComponent(EnemyLayer).enemyPools.get(this.node.name);
         enemyPool.put(this.node);
 

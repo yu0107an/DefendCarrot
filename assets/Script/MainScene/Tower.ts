@@ -178,7 +178,13 @@ export class Tower extends Component implements IObserver {
         this.changeState('idle');
     }
 
-    update(deltaTime: number) {
+    canUpgrade(coinNumber: number)
+    {
+        return this.level !== 3 && this.createPrice[this.level] <= coinNumber;
+    }
+
+    update(deltaTime: number)
+    {
         if (this.isPause || (!this.attackPoint && this.attackTarget_Enemy.size() === 0))
         {
             this.changeState('idle');
@@ -265,7 +271,8 @@ export class Tower extends Component implements IObserver {
         return (angle + 360) % 360;
     }
 
-    protected onDestroy(): void {
+    onDestroy()
+    {
         this.node.off(Node.EventType.TOUCH_END);
         EventManager.Instance.delObserver(this, IObserverType.GameState);
     }

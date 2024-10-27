@@ -111,8 +111,6 @@ export class UIControl extends Component implements IObserver {
                 }, 1.5);
             })
             .start();
-        
-        
     }
 
     showObstacleClear()
@@ -228,7 +226,7 @@ export class UIControl extends Component implements IObserver {
                 {
                     EventManager.Instance.clearTowerRangeAndInfo();
                     func('upgrade');
-                    EventManager.Instance.createEffect(pos, 'Air');
+                    EventManager.Instance.createEffect(pos, 'Air', true);
                     AudioManager.Instance.playAudioById(7);
                 }
             });
@@ -252,7 +250,7 @@ export class UIControl extends Component implements IObserver {
             EventManager.Instance.clearTowerRangeAndInfo();
             this.clearTowerInfo();
             func('sell');
-            EventManager.Instance.createEffect(pos, 'Air');
+            EventManager.Instance.createEffect(pos, 'Air', true);
             AudioManager.Instance.playAudioById(6);
         })
         this.sellNode.setPosition(v3(pos.x, pos.y - 80));

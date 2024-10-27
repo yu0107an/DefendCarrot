@@ -6,7 +6,7 @@ const { ccclass, property } = _decorator;
 export class Effect extends Component {
 
     followTarget: Node;
-    
+
     unuse()
     {
         this.followTarget = null;
@@ -15,7 +15,6 @@ export class Effect extends Component {
         {
             animation.off(Animation.EventType.LASTFRAME, this.recycleSelf, this);
         }
-        
     }
 
     reuse(data: Node)
@@ -38,26 +37,9 @@ export class Effect extends Component {
                 .call(this.recycleSelf.bind(this))
                 .start();
         }
+
     }
     
-    recycleSelf(time?: number)
-    {
-        let destroy = () => {
-            let nodePool = this.node.parent.getComponent(EffectLayer).effectPools.get(this.node.name);
-            nodePool.put(this.node);
-        };
-
-        if (time)
-        {
-            this.unschedule(destroy);
-            this.scheduleOnce(destroy, time);
-        }
-        else
-        {
-            destroy();    
-        }
-    }
-
     update(deltaTime: number)
     {
         if (this.followTarget)
@@ -71,6 +53,18 @@ export class Effect extends Component {
                 this.recycleSelf();    
             }
         }
+    }
+
+    recycleSelfByTime(time: number)
+    {
+        this.unschedule(this.recycleSelf);
+        this.scheduleOnce(this.recycleSelf, time);
+    }
+
+    recycleSelf()
+    {
+        let nodePool = this.node.parent.getComponent(EffectLayer).effectPools.get(this.node.name);
+        nodePool.put(this.node);
     }
 
 }

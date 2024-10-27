@@ -96,7 +96,7 @@ export class Bullet extends Component implements IObserver {
     {
         if (needEffect)
         {
-            EventManager.Instance.createEffect(this.target.position, this.shoterName);
+            EventManager.Instance.createEffect(this.target.position, this.shoterName, true);
         }
         let bulletPool = this.node.parent.getComponent(BulletLayer).bulletPools.get(this.id);
         bulletPool.put(this.node);

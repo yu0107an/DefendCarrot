@@ -1,7 +1,7 @@
 interface IObserver
 {
     eventIndex?: number;
-    gameStateChanged?(isPaused);
-    gameCoinChanged?(coinNumber);
+    gameStateChanged?(isPaused: boolean);
+    gameCoinChanged?(coinNumber:number);
 }
 

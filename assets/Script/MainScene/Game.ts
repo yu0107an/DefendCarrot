@@ -90,7 +90,8 @@ export class Game extends Component {
         director.loadScene('MainScene');
     }
 
-    onDestroy() {
+    onDestroy()
+    {
         //切换场景必须重置，不然报错
         // if (this.oldTick) {
         //     director.tick = this.oldTick;

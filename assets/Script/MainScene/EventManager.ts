@@ -148,15 +148,20 @@ export class EventManager {
     }
 
     //创建effect
-    createEffect(pos: Vec3, name: string, followTarget?: Node, coinNumber?: number)
+    createEffect(pos: Vec3, name: string, autoDisappear: boolean, followTarget?: Node, coinNumber?: number)
     {
-        this.effectLayerTs.createEffect(pos, name, followTarget, coinNumber);
+        this.effectLayerTs.createEffect(pos, name, autoDisappear, followTarget, coinNumber);
     }
 
-    //修改指定effect
+    //修改跟随型effect的消失时间，为0则直接消失
     setEffect(target: Node, shoterName: string, destroyTime: number)
     {
         this.effectLayerTs.setEffect(target, shoterName, destroyTime);
+    }
+
+    isExistEffect(target: Node, name: string):boolean
+    {
+        return this.effectLayerTs.isExistEffect(target, name);
     }
 
     //画出防御塔范围及升级和销毁按钮

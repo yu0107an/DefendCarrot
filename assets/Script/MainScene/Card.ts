@@ -12,7 +12,8 @@ export class Card extends Component {
     createCoin: number;//建造所需花费
     canClick: Boolean;
 
-    start() {
+    start()
+    {
         this.node.on(Node.EventType.TOUCH_END, this.click, this);
     }
 
@@ -51,16 +52,15 @@ export class Card extends Component {
             return;
         }
         let pos = this.node.parent.getComponent(ChoiceCard).curPos;
-        let x = Math.floor(pos.x / 80);
-        let y = Math.floor(pos.y / 80);
         EventManager.Instance.createTower(this.id, pos);
         EventManager.Instance.disableSelect();
         event.propagationStopped = true;
-        EventManager.Instance.createEffect(v3(pos.x - 480, pos.y - 320), 'Air');
+        EventManager.Instance.createEffect(v3(pos.x - 480, pos.y - 320), 'Air', true);
         AudioManager.Instance.playAudioById(8);
     }
 
-    protected onDestroy(): void {
+    onDestroy()
+    {
         this.node.off(Node.EventType.TOUCH_END);
     }
 

@@ -11,7 +11,8 @@ export class EffectLayer extends Component {
     @property(SpriteAtlas)
     atlas: SpriteAtlas;
         
-    start() {
+    start()
+    {
         for (let i = 0; i < this.effects.length; i++)
         {
             this.effectPools.set(this.effects[i].name, new NodePool('Effect'));
@@ -25,8 +26,8 @@ export class EffectLayer extends Component {
     }
 
     //effect用name区分，分别是Air、Appear、Money以及各种子弹击中的效果(对应的name是防御塔的类型名字)
-    createEffect(pos: Vec3, name: string, followTarget?: Node, coinNumber?: number)
-    {
+    createEffect(pos: Vec3, name: string, autoDisappear: boolean, followTarget?: Node, coinNumber?: number)
+    {   
         let nodePool = this.effectPools.get(name);
         if (!nodePool)
         {
@@ -58,25 +59,40 @@ export class EffectLayer extends Component {
                 }
             }
         }
-        let effect = nodePool.get(followTarget, true);
+        let effect = nodePool.get(followTarget, autoDisappear);
         this.node.addChild(effect);
         effect.setPosition(pos);
     }
 
+    //修改跟随型effect的消失时间，为0则直接消失
     setEffect(target: Node, shoterName: string, destroyTime: number)
     {
-        let effect = this.node.children.find(value => value.getComponent(Effect).followTarget === target);
+        let effect = this.node.children.find((value) => {
+            let followTarget = value.getComponent(Effect).followTarget;
+            return followTarget && followTarget === target;
+        });
+
         if (effect)
         {
-            effect.getComponent(Effect).recycleSelf(destroyTime);
+            effect.getComponent(Effect).recycleSelfByTime(destroyTime);
         }
-        else
+        else if (destroyTime != 0)
         {
             let nodePool = this.effectPools.get(shoterName.split('T', 2)[1]);
             effect = nodePool.get(target, false);
             this.node.addChild(effect);
             effect.setPosition(target.position);
+            effect.getComponent(Effect).recycleSelfByTime(destroyTime);
         }
+    }
+
+    isExistEffect(target: Node, name: string): boolean
+    {
+        if (this.node.children.find(value => value.getComponent(Effect).followTarget === target && value.name === name))
+        {
+            return true;
+        }
+        return false;
     }
 }
 
