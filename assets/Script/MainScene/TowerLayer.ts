@@ -70,5 +70,3 @@ export class TowerLayer extends Component implements IObserver {
     }
 
 }
-
-

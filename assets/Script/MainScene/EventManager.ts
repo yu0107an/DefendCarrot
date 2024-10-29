@@ -10,6 +10,7 @@ import { BulletLayer } from './BulletLayer';
 import { EnemyLayer } from './EnemyLayer';
 import { ObstacleLayer } from './ObstacleLayer';
 import { AudioManager } from './AudioManager';
+import { GameInfo } from '../GameInfo';
 const { ccclass, property } = _decorator;
 
 export enum IObserverType
@@ -306,6 +307,14 @@ export class EventManager {
     //游戏通关
     gameWin()
     {
+        if (GameInfo.Instance.curTheme === GameInfo.Instance.Theme)
+        {
+            if (GameInfo.Instance.curLevel === GameInfo.Instance.Level)
+            {
+                GameInfo.Instance.Level += 1;
+                GameInfo.Instance.saveProgress(GameInfo.Instance.Theme, GameInfo.Instance.Level);
+            }
+        }
         this.UI2Ts.showGameWin();
         this.UI2Ts.disableUpButton();
         director.pause();

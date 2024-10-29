@@ -26,7 +26,7 @@ export class Canvas extends Component {
 
     bossMode(event: Event)
     {
-        if (GameInfo.bossMode)
+        if (GameInfo.Instance.BossMode)
         {
             
         }
@@ -41,7 +41,7 @@ export class Canvas extends Component {
 
     monsterNest(event: Event)
     {
-        if (GameInfo.monsterNest)
+        if (GameInfo.Instance.MonsterNest)
         {
 
         }

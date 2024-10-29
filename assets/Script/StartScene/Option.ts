@@ -27,7 +27,7 @@ export class Option extends Component {
         this.bgmButton.children.forEach((button) => {
             button.active = !button.active;
         })
-        GameInfo.bgm = !GameInfo.bgm;
+        GameInfo.Instance.Bgm = !GameInfo.Instance.Bgm;
         Audio.Instance.setVolume('Bgm');
     }
 
@@ -36,7 +36,7 @@ export class Option extends Component {
         this.seButton.children.forEach((button) => {
             button.active = !button.active;
         })
-        GameInfo.se = !GameInfo.se;
+        GameInfo.Instance.Se = !GameInfo.Instance.Se;
         Audio.Instance.setVolume('Se');
     }
 

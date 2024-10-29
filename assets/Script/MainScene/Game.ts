@@ -35,11 +35,11 @@ export class Game extends Component {
         EventManager.Instance.showLoading();
         this.scheduleOnce(() => {
             this.coin = 0;
-            GameInfo.maxWave = this.levelDt.json[GameInfo.theme - 1].wave[GameInfo.level - 1];
-            let weaponDt = this.levelDt.json[GameInfo.theme - 1].weapon[GameInfo.level - 1];
-            let monsterDt = this.levelDt.json[GameInfo.theme - 1].monsterid[GameInfo.level - 1];
-            let waveDt = this.levelDt.json[GameInfo.theme - 1].wavemonstercount[GameInfo.level - 1];
-            this.gameCoinChanged(this.levelDt.json[GameInfo.theme - 1].initgold[GameInfo.level - 1]);
+            GameInfo.Instance.maxWave = this.levelDt.json[GameInfo.Instance.curTheme - 1].wave[GameInfo.Instance.curLevel - 1];
+            let weaponDt = this.levelDt.json[GameInfo.Instance.curTheme - 1].weapon[GameInfo.Instance.curLevel - 1];
+            let monsterDt = this.levelDt.json[GameInfo.Instance.curTheme - 1].monsterid[GameInfo.Instance.curLevel - 1];
+            let waveDt = this.levelDt.json[GameInfo.Instance.curTheme - 1].wavemonstercount[GameInfo.Instance.curLevel - 1];
+            this.gameCoinChanged(this.levelDt.json[GameInfo.Instance.curTheme - 1].initgold[GameInfo.Instance.curLevel - 1]);
             EventManager.Instance.initLevelData(weaponDt, monsterDt, waveDt);
         }, 0.8);
     }
@@ -83,7 +83,7 @@ export class Game extends Component {
     
     nextGame()
     {
-        GameInfo.level += 1;
+        GameInfo.Instance.curLevel += 1;
         EventManager.Instance.clearAllObserver();
         director.tick = this.oldTick;
         director.resume();

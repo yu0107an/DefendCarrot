@@ -45,11 +45,11 @@ export class Audio extends Component {
     {
         if (type === 'Bgm')
         {
-            this.bgm.volume = Number(GameInfo.bgm);
+            this.bgm.volume = Number(GameInfo.Instance.Bgm);
         }
         else if(type === 'Se')
         {
-            this.select.volume = Number(GameInfo.se);
+            this.select.volume = Number(GameInfo.Instance.Se);
         }
     }
 

@@ -13,7 +13,7 @@ export class Map extends Component {
 
     start()
     {
-        let path = 'Theme' + GameInfo.theme.toString() + '/BG' + GameInfo.level.toString() + '/';
+        let path = 'Theme' + GameInfo.Instance.curTheme.toString() + '/BG' + GameInfo.Instance.curLevel.toString() + '/';
         resources.load(path + 'BGPath', TiledMapAsset, (err, tiledMap) => {
             this.node.getComponent(TiledMap).tmxAsset = tiledMap;
             this.objects = this.node.getComponent(TiledMap).getObjectGroup('PATH');

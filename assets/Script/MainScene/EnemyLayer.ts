@@ -47,13 +47,13 @@ export class EnemyLayer extends Component implements IObserver {
         {
             return;
         }
-        if (this.curWave === GameInfo.maxWave)
+        if (this.curWave === GameInfo.Instance.maxWave)
         {
             EventManager.Instance.gameWin();
             return;
         }
         this.curWave += 1;
-        if (this.curWave === GameInfo.maxWave)
+        if (this.curWave === GameInfo.Instance.maxWave)
         {
             EventManager.Instance.showFinalWave();
         }

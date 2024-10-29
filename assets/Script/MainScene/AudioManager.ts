@@ -28,10 +28,10 @@ export class AudioManager extends Component {
     {
         this.audios = this.node.getComponents(AudioSource);
         AudioManager.instance = this;
-        this.audios[0].volume = Number(GameInfo.bgm);
+        this.audios[0].volume = Number(GameInfo.Instance.Bgm);
         for (let i = 1; i < this.audios.length; i++)
         {
-            this.audios[i].volume = Number(GameInfo.se);
+            this.audios[i].volume = Number(GameInfo.Instance.Se);
         }
     }
 

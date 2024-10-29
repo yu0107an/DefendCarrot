@@ -33,7 +33,7 @@ export class UIControl extends Component implements IObserver {
 
     init(carrotPos: Vec3)
     {
-        this.node.getChildByPath('UP/WaveCount/AllWave').getComponent(Label).string = GameInfo.maxWave.toString();
+        this.node.getChildByPath('UP/WaveCount/AllWave').getComponent(Label).string = GameInfo.Instance.maxWave.toString();
         this.choiceCard = this.node.getChildByName('ChoiceCard');
         this.disableUpButton();
 
@@ -81,7 +81,7 @@ export class UIControl extends Component implements IObserver {
         let allWave = this.node.getChildByPath('UP/WaveCount/AllWave').getComponent(Label).string;
         gameOverNode.getChildByName('CurWave').getComponent(Label).string = curWave;
         gameOverNode.getChildByName('AllWave').getComponent(Label).string = allWave;
-        gameOverNode.getChildByName('CurLevel').getComponent(Label).string = GameInfo.level.toString();
+        gameOverNode.getChildByName('CurLevel').getComponent(Label).string = GameInfo.Instance.curLevel.toString();
     }
 
     showGameWin()
@@ -92,7 +92,7 @@ export class UIControl extends Component implements IObserver {
         let allWave = this.node.getChildByPath('UP/WaveCount/AllWave').getComponent(Label).string;
         gameWinNode.getChildByName('CurWave').getComponent(Label).string = curWave;
         gameWinNode.getChildByName('AllWave').getComponent(Label).string = allWave;
-        gameWinNode.getChildByName('CurLevel').getComponent(Label).string = GameInfo.level.toString();
+        gameWinNode.getChildByName('CurLevel').getComponent(Label).string = GameInfo.Instance.curLevel.toString();
     }
 
     showFinalWave()
