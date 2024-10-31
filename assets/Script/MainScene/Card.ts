@@ -1,7 +1,7 @@
 import { _decorator, Component, Node, resources, Sprite, SpriteAtlas, SpriteFrame, v3} from 'cc';
 import { ChoiceCard } from './ChoiceCard';
-import { EventManager } from './EventManager';
-import { AudioManager } from './AudioManager';
+import { EventManager } from '../Frame/EventManager';
+import { AudioManager } from '../Frame/AudioManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Card')

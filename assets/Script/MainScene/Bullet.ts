@@ -1,6 +1,6 @@
 import { _decorator, Component, Node, v2, v3, Vec2, view } from 'cc';
 import { BulletLayer } from './BulletLayer';
-import { EventManager, IObserverType } from './EventManager';
+import { EventManager, IObserverType } from '../Frame/EventManager';
 import { BulletChildren } from './BulletChildren';
 const { ccclass, property } = _decorator;
 

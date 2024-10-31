@@ -1,6 +1,6 @@
 import { _decorator, Component, Node, tween, v3 } from 'cc';
-import { EventManager } from './EventManager';
-import { AudioManager } from './AudioManager';
+import { EventManager } from '../Frame/EventManager';
+import { AudioManager } from '../Frame/AudioManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('CountDown')

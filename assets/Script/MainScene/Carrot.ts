@@ -1,6 +1,6 @@
 import { _decorator, Component, Node, Animation, SpriteFrame, macro, Sprite, Vec3 } from 'cc';
-import { EventManager } from './EventManager';
-import { AudioManager } from './AudioManager';
+import { EventManager } from '../Frame/EventManager';
+import { AudioManager } from '../Frame/AudioManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Carrot')

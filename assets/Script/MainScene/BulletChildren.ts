@@ -1,5 +1,5 @@
 import { _decorator, Collider2D, Component, Contact2DType, IPhysics2DContact, Node } from 'cc';
-import { EventManager } from './EventManager';
+import { EventManager } from '../Frame/EventManager';
 import { Bullet } from './Bullet';
 const { ccclass, property } = _decorator;
 

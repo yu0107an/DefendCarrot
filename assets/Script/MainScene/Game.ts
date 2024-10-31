@@ -1,6 +1,6 @@
 import { _decorator, Component, director, JsonAsset, Node } from 'cc';
-import { GameInfo } from '../GameInfo';
-import { EventManager } from './EventManager';
+import { GameInfo } from '../Frame/GameInfo';
+import { EventManager } from '../Frame/EventManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Game')
@@ -32,7 +32,6 @@ export class Game extends Component {
 
     initLevel()
     {
-        EventManager.Instance.showLoading();
         this.scheduleOnce(() => {
             this.coin = 0;
             GameInfo.Instance.maxWave = this.levelDt.json[GameInfo.Instance.curTheme - 1].wave[GameInfo.Instance.curLevel - 1];
@@ -41,7 +40,8 @@ export class Game extends Component {
             let waveDt = this.levelDt.json[GameInfo.Instance.curTheme - 1].wavemonstercount[GameInfo.Instance.curLevel - 1];
             this.gameCoinChanged(this.levelDt.json[GameInfo.Instance.curTheme - 1].initgold[GameInfo.Instance.curLevel - 1]);
             EventManager.Instance.initLevelData(weaponDt, monsterDt, waveDt);
-        }, 0.8);
+            EventManager.Instance.closeLoading();
+        }, 0.5);
     }
 
     gameStateChanged(isPaused: boolean)

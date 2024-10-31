@@ -1,5 +1,5 @@
 import { _decorator, Component, Node, ProgressBar } from 'cc';
-import { EventManager } from './EventManager';
+import { EventManager } from '../Frame/EventManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Obstacle')

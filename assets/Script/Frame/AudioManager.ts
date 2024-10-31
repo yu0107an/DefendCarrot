@@ -1,5 +1,5 @@
 import { _decorator, AudioSource, Component, Node } from 'cc';
-import { GameInfo } from '../GameInfo';
+import { GameInfo } from './GameInfo';
 const { ccclass, property } = _decorator;
 
 @ccclass('AudioManager')

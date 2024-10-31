@@ -1,10 +1,10 @@
 import { _decorator, Component, Node, Event, Label, SpriteAtlas, Sprite, v3, Prefab, instantiate, Button, Vec3, tween } from 'cc';
-import { EventManager, IObserverType } from './EventManager';
+import { EventManager, IObserverType } from '../Frame/EventManager';
 import { ChoiceCard } from './ChoiceCard';
 import { AttackPoint } from './AttackPoint';
-import { GameInfo } from '../GameInfo';
+import { GameInfo } from '../Frame/GameInfo';
 import { CountDown } from './CountDown';
-import { AudioManager } from './AudioManager';
+import { AudioManager } from '../Frame/AudioManager';
 import { Carrot } from './Carrot';
 const { ccclass, property } = _decorator;
 
@@ -48,9 +48,11 @@ export class UIControl extends Component implements IObserver {
     showLoading()
     {
         this.node.getChildByName('Loading').active = true;
-        this.scheduleOnce(() => {
-            this.node.getChildByName('Loading').active = false;
-        }, 0.8);
+    }
+
+    closeLoading()
+    {
+        this.node.getChildByName('Loading').active = false;
     }
 
     disableUpButton()

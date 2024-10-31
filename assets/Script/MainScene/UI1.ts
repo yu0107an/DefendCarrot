@@ -36,6 +36,7 @@ export class UI1 extends Component {
 
     clearTowerRange()
     {
+        this.selectNode.active = false;
         this.drawTool.getComponent(Graphics).clear();
     }
 

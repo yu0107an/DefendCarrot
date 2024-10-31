@@ -1,5 +1,5 @@
 import { _decorator, Component, Event, Node } from 'cc';
-import { GameInfo } from '../GameInfo';
+import { GameInfo } from '../Frame/GameInfo';
 import { Audio } from './Audio';
 const { ccclass, property } = _decorator;
 

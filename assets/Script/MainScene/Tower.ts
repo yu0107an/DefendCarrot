@@ -1,8 +1,8 @@
 import { _decorator, Component, Node, v2, Animation, Vec3, AudioSource } from 'cc';
-import { EventManager, IObserverType } from './EventManager';
+import { EventManager, IObserverType } from '../Frame/EventManager';
 import { TowerChildren } from './TowerChildren';
 import { PriorityQueue } from '../PriorityQueue';
-import { AudioManager } from './AudioManager';
+import { AudioManager } from '../Frame/AudioManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Tower')

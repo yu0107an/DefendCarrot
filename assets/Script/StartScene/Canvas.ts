@@ -1,6 +1,7 @@
 import { _decorator, Component, Event, Node } from 'cc';
 import { Audio } from './Audio';
-import { GameInfo } from '../GameInfo';
+import { GameInfo } from '../Frame/GameInfo';
+
 const { ccclass, property } = _decorator;
 
 @ccclass('Canvas')

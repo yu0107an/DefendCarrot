@@ -1,7 +1,7 @@
 import { _decorator, Component, instantiate, JsonAsset, Node, Prefab, v3, Vec3 } from 'cc';
 import { Tower } from './Tower';
 import { Game } from './Game';
-import { EventManager, IObserverType } from './EventManager';
+import { EventManager, IObserverType } from '../Frame/EventManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('TowerLayer')

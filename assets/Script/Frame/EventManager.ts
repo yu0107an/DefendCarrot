@@ -1,16 +1,16 @@
 import { _decorator, director, find, Node, v3, Vec3 } from 'cc';
-import { Game } from './Game';
-import { EffectLayer } from './EffectLayer';
-import { UI1 } from './UI1';
-import { Map } from './Map';
-import { UIControl } from './UIControl';
-import { ChoiceCard } from './ChoiceCard';
-import { TowerLayer } from './TowerLayer';
-import { BulletLayer } from './BulletLayer';
-import { EnemyLayer } from './EnemyLayer';
-import { ObstacleLayer } from './ObstacleLayer';
+import { Game } from '../MainScene/Game';
+import { EffectLayer } from '../MainScene/EffectLayer';
+import { UI1 } from '../MainScene/UI1';
+import { Map } from '../MainScene/Map';
+import { UIControl } from '../MainScene/UIControl';
+import { ChoiceCard } from '../MainScene/ChoiceCard';
+import { TowerLayer } from '../MainScene/TowerLayer';
+import { BulletLayer } from '../MainScene/BulletLayer';
+import { EnemyLayer } from '../MainScene/EnemyLayer';
+import { ObstacleLayer } from '../MainScene/ObstacleLayer';
 import { AudioManager } from './AudioManager';
-import { GameInfo } from '../GameInfo';
+import { GameInfo } from './GameInfo';
 const { ccclass, property } = _decorator;
 
 export enum IObserverType
@@ -123,7 +123,13 @@ export class EventManager {
     {
         this.UI2Ts.showLoading();
     }
-    
+
+    //关闭加载图片
+    closeLoading()
+    {
+        this.UI2Ts.closeLoading();
+    }
+
     //展示最后一波的图片
     showFinalWave()
     {
@@ -174,6 +180,7 @@ export class EventManager {
             return;
         }
         this.UI1Ts.drawTowerRange(radius, pos);
+        this.UI1Ts.showSelectNode(v3(pos.x + 480, pos.y + 320));
         this.UI2Ts.drawTowerInfo(pos, upgradePrice, sellPrice, func);
     }
 

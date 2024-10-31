@@ -1,8 +1,8 @@
 import { _decorator, Component, instantiate, JsonAsset, Node, NodePool, Prefab, v2, v3 } from 'cc';
 import { Enemy } from './Enemy';
-import { struct } from './AStar';
-import { EventManager, IObserverType } from './EventManager';
-import { GameInfo } from '../GameInfo';
+import { struct } from '../Frame/AStar';
+import { EventManager, IObserverType } from '../Frame/EventManager';
+import { GameInfo } from '../Frame/GameInfo';
 const { ccclass, property } = _decorator;
 
 @ccclass('EnemyLayer')

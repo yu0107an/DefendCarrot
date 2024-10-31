@@ -1,9 +1,9 @@
 import { _decorator, Component, Node, resources, Sprite, SpriteFrame, TiledMap, TiledMapAsset, TiledObjectGroup} from 'cc';
-import { EventManager } from './EventManager';
-import { struct } from './AStar';
+import { EventManager } from '../Frame/EventManager';
+import { struct } from '../Frame/AStar';
 import { ObstacleInfo } from './ObstacleLayer';
-import { GameInfo } from '../GameInfo';
-import { AudioManager } from './AudioManager';
+import { GameInfo } from '../Frame/GameInfo';
+import { AudioManager } from '../Frame/AudioManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Map')
@@ -11,16 +11,46 @@ export class Map extends Component {
 
     objects: TiledObjectGroup;
 
-    start()
+    async start()
     {
-        let path = 'Theme' + GameInfo.Instance.curTheme.toString() + '/BG' + GameInfo.Instance.curLevel.toString() + '/';
-        resources.load(path + 'BGPath', TiledMapAsset, (err, tiledMap) => {
-            this.node.getComponent(TiledMap).tmxAsset = tiledMap;
-            this.objects = this.node.getComponent(TiledMap).getObjectGroup('PATH');
-        });
-        resources.load(path + 'BG-hd/spriteFrame', SpriteFrame, (err, sp) => {
-            this.node.getChildByName('Road').getComponent(Sprite).spriteFrame = sp;
-        });
+        EventManager.Instance.showLoading();
+        const path = 'Theme' + GameInfo.Instance.curTheme.toString() + '/BG' + GameInfo.Instance.curLevel.toString() + '/';
+        const [tiledMap, spriteFrame] = await Promise.all([this.loadTileMap(path), this.loadRoadSprite(path)]);
+        this.node.getComponent(TiledMap).tmxAsset = tiledMap;
+        this.node.getChildByName('Road').getComponent(Sprite).spriteFrame = spriteFrame;
+        this.objects = this.node.getComponent(TiledMap).getObjectGroup('PATH');
+    }
+
+    loadTileMap(path: string): Promise<TiledMapAsset>
+    {
+        return new Promise<TiledMapAsset>((resolve, reject) => {
+            resources.load(path + 'BGPath', TiledMapAsset, (err, tiledMap) => {
+                if (err)
+                {
+                    reject(err);
+                }
+                else
+                {
+                    resolve(tiledMap);    
+                }
+            });
+        })
+    }
+
+    loadRoadSprite(path: string): Promise<SpriteFrame>
+    {
+        return new Promise<SpriteFrame>((resolve, reject) => {
+            resources.load(path + 'BG-hd/spriteFrame', SpriteFrame, (err, sp) => {
+                if (err)
+                {
+                    reject(err);
+                }
+                else
+                {
+                    resolve(sp);    
+                }
+            });
+        })
     }
 
     getEnemyPath(): struct[]

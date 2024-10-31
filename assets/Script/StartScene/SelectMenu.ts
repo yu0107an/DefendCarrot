@@ -1,5 +1,5 @@
 import { _decorator, Component, director, Event, find, Node, PageView } from 'cc';
-import { GameInfo } from '../GameInfo';
+import { GameInfo } from '../Frame/GameInfo';
 import { Canvas } from './Canvas';
 import { Audio } from './Audio';
 const { ccclass, property } = _decorator;
@@ -39,7 +39,7 @@ export class SelectMenu extends Component {
             this.curPageView = themePage.getComponent(PageView);
             themePage.active = true;
             this.node.getChildByName('LevelPage0' + this.curTheme).active = false;
-            this.node.getChildByName('PlayButton').active = false;
+            this.node.getChildByPath('Buttons/PlayButton').active = false;
         }
         Audio.Instance.playSelect();
     }
@@ -54,12 +54,16 @@ export class SelectMenu extends Component {
 
     replacePageView(event: Event, data: string)
     {
+        if (event.target.getChildByName('Locked') !== null)
+        {
+            return;
+        }
         this.curTheme = Number(data);
         event.target.parent.parent.parent.active = false;
         let newPage = this.node.getChildByName('LevelPage0' + data);
         this.curPageView = newPage.getComponent(PageView);
         newPage.active = true;
-        this.node.getChildByName('PlayButton').active = true;
+        this.node.getChildByPath('Buttons/PlayButton').active = true;
 
         let count = 0;
         if (this.curTheme < GameInfo.Instance.Theme)
@@ -85,17 +89,17 @@ export class SelectMenu extends Component {
         }
         Audio.Instance.playSelect();
 
-        if (this.curTheme === GameInfo.Instance.Theme)
+        if (this.curTheme === GameInfo.Instance.Theme && this.curPageView.node.name !== 'ThemePage')
         {
             if (this.curPageView.curPageIdx + 1 <= GameInfo.Instance.Level)
             {
-                this.node.getChildByName('PlayButton').active = true;
-                this.node.getChildByName('Locked').active = false;
+                this.node.getChildByPath('Buttons/PlayButton').active = true;
+                this.node.getChildByPath('Locked').active = false;
             }
             else
             {
-                this.node.getChildByName('PlayButton').active = false;
-                this.node.getChildByName('Locked').active = true;
+                this.node.getChildByPath('Buttons/PlayButton').active = false;
+                this.node.getChildByPath('Locked').active = true;
             }
         }
     }
@@ -109,17 +113,17 @@ export class SelectMenu extends Component {
         }
         Audio.Instance.playSelect();
 
-        if (this.curTheme === GameInfo.Instance.Theme)
+        if (this.curTheme === GameInfo.Instance.Theme && this.curPageView.node.name !== 'ThemePage')
         {
             if (this.curPageView.curPageIdx + 1 <= GameInfo.Instance.Level)
             {
-                this.node.getChildByName('PlayButton').active = true;
-                this.node.getChildByName('Locked').active = false;
+                this.node.getChildByPath('Buttons/PlayButton').active = true;
+                this.node.getChildByPath('Locked').active = false;
             }
             else
             {
-                this.node.getChildByName('PlayButton').active = false;
-                this.node.getChildByName('Locked').active = true;
+                this.node.getChildByPath('Buttons/PlayButton').active = false;
+                this.node.getChildByPath('Locked').active = true;
             }
         }
     }

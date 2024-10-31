@@ -1,8 +1,8 @@
 import { _decorator, Collider2D, Component, Contact2DType, IPhysics2DContact, Node, ProgressBar, tween, v3, Vec3 } from 'cc';
 import { EnemyLayer } from './EnemyLayer';
-import { struct } from './AStar';
-import { EventManager, IObserverType } from './EventManager';
-import { AudioManager } from './AudioManager';
+import { struct } from '../Frame/AStar';
+import { EventManager, IObserverType } from '../Frame/EventManager';
+import { AudioManager } from '../Frame/AudioManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Enemy')
