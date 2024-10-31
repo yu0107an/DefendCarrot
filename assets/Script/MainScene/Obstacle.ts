@@ -44,6 +44,7 @@ export class Obstacle extends Component {
             EventManager.Instance.createEffect(this.node.position, 'Air', true);
             EventManager.Instance.createEffect(this.node.position, 'Money', true, null, this.reward);
             EventManager.Instance.cancelAttackPoint();
+            EventManager.Instance.changeCoin(this.reward);
             this.node.destroy();
         }
         let percent = this.curHp / this.maxHp;

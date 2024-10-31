@@ -27,37 +27,34 @@ export class EffectLayer extends Component {
 
     //effect用name区分，分别是Air、Appear、Money以及各种子弹击中的效果(对应的name是防御塔的类型名字)
     createEffect(pos: Vec3, name: string, autoDisappear: boolean, followTarget?: Node, coinNumber?: number)
-    {   
-        let nodePool = this.effectPools.get(name);
-        if (!nodePool)
+    {
+        let nodePool;
+        if (name === 'Money')
         {
-            this.effectPools.set(name, new NodePool('Effect'));
-            nodePool = this.effectPools.get(name);
-            if (name === 'Money')
+            nodePool = this.effectPools.get(name + coinNumber.toString());
+            if (!nodePool)
             {
-                name = 'money';
+                name += coinNumber.toString();
+                this.effectPools.set(name, new NodePool('Effect'));
+                nodePool = this.effectPools.get(name);
+                let spriteFrameName = 'money';
                 if (coinNumber < 10)
                 {
-                    name += '0';
+                    spriteFrameName += '0';
                 }
-                name += coinNumber.toString();
-                for (let j = 0; j < 30; j++)
-                {
-                    let effect = new Node('Money');
-                    effect.addComponent(Sprite).spriteFrame = this.atlas.getSpriteFrame(name);
-                    effect.addComponent(Effect);
-                    nodePool.put(effect);
-                }
-            }
-            else
-            {
+                spriteFrameName += coinNumber.toString();
                 for (let j = 0; j < 30; j++)
                 {
                     let effect = new Node(name);
+                    effect.addComponent(Sprite).spriteFrame = this.atlas.getSpriteFrame(spriteFrameName);
                     effect.addComponent(Effect);
                     nodePool.put(effect);
                 }
             }
+        }
+        else
+        {
+            nodePool = this.effectPools.get(name);
         }
         let effect = nodePool.get(followTarget, autoDisappear);
         this.node.addChild(effect);

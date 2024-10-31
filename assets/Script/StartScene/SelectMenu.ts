@@ -39,6 +39,7 @@ export class SelectMenu extends Component {
             this.curPageView = themePage.getComponent(PageView);
             themePage.active = true;
             this.node.getChildByName('LevelPage0' + this.curTheme).active = false;
+            this.node.getChildByPath('Locked').active = false;
             this.node.getChildByPath('Buttons/PlayButton').active = false;
         }
         Audio.Instance.playSelect();

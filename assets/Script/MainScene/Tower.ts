@@ -39,7 +39,9 @@ export class Tower extends Component implements IObserver {
         this.SpinType = data.SpinType;
         this.node.children[this.level - 1].getComponent(TowerChildren).setActive(true);
         this.isPause = isPaused;
-        this.attackPoint = target;
+        this.scheduleOnce(() => {
+            this.comfirmAttackPoint(target);
+        }, 0.1);
         EventManager.Instance.changeCoin(-this.createPrice[this.level - 1]);
         EventManager.Instance.addObserver(this, IObserverType.GameState);
     }
@@ -110,6 +112,10 @@ export class Tower extends Component implements IObserver {
     //确认攻击目标
     comfirmAttackPoint(target: Node)
     {
+        if (!target)
+        {
+            return;
+        }
         let index = -1;
         if (target.parent.name === 'EnemyLayer')
         {

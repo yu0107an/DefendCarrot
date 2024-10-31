@@ -68,5 +68,3 @@ export class Effect extends Component {
     }
 
 }
-
-

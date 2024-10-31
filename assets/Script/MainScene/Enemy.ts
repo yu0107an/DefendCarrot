@@ -86,7 +86,6 @@ export class Enemy extends Component implements IObserver {
         {
             EventManager.Instance.confirmAttackPoint(this.node);
         }
-        
     }
 
     gameStateChanged(isPaused: boolean)

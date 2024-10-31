@@ -9,7 +9,7 @@
     "designResolution": {
       "width": 960,
       "height": 640,
-      "fitHeight": false
+      "fitHeight": true
     },
     "highQuality": false
   },
