@@ -22,24 +22,27 @@ export class BulletChildren extends Component {
 
     onBeginContact(self: Collider2D, other: Collider2D, contact: IPhysics2DContact)
     {
+        let bulletTs = this.node.parent.getComponent(Bullet);
         switch (other.group)
         {
             case 4:
-                EventManager.Instance.reduceHp_Enemy(other.node, self.node.parent.getComponent(Bullet).atk);
-                let parentTs = self.node.parent.getComponent(Bullet);
-                if (parentTs.speedBuff !== 0)
+                EventManager.Instance.reduceHp_Enemy(other.node, bulletTs.atk);
+                if (bulletTs.speedBuff !== 0)
                 {
-                    EventManager.Instance.speedDown_Enemy(other.node, parentTs.speedBuff, parentTs.shoterName);
+                    EventManager.Instance.speedDown_Enemy(other.node, bulletTs.speedBuff, bulletTs.shoterName);
                 }
                 break;
             case 32:
-                EventManager.Instance.reduceHp_Obstacle(other.node, self.node.parent.getComponent(Bullet).atk);
+                if (bulletTs.target !== other.node && !bulletTs.isPenetrate)
+                {
+                    return;
+                }
+                EventManager.Instance.reduceHp_Obstacle(other.node, bulletTs.atk);
                 break;
             default:
                 break;
         }
 
-        let bulletTs = this.node.parent.getComponent(Bullet);
         if (!bulletTs.isPenetrate)
         {
             bulletTs.recycleSelf();
