@@ -8,6 +8,8 @@ const { ccclass, property } = _decorator;
 export class Bullet extends Component implements IObserver {
 
     target: Node;//目标
+    isFollowTarget: boolean;//是否跟踪敌人
+    isPenetrate: boolean;//是否穿透敌人
     shoterName: string//发射的防御塔name
     atk: number;//攻击力
     curLevel: number = 1;//等级
@@ -44,6 +46,8 @@ export class Bullet extends Component implements IObserver {
         this.nAck = data.nAck;
         this.bRotate = data.bRotate;
         this.speedBuff = data.speedbuff;
+        this.isFollowTarget = data.isFollowTarget;
+        this.isPenetrate = data.isPenetrate;
     }
 
     gameStateChanged(isPaused: boolean)
@@ -64,10 +68,16 @@ export class Bullet extends Component implements IObserver {
                 let dx = this.target.position.x - this.node.position.x;
                 let dy = this.target.position.y - this.node.position.y;
                 this.direction = v2(dx, dy).normalize();
-
-                //旋转子弹
-                let rotation = Math.atan2(this.direction.y, this.direction.x) * (180 / Math.PI) - 90;
-                this.node.angle = rotation;
+                if (!this.isFollowTarget)
+                {
+                    this.isLoseTarget = true;
+                }
+                else
+                {
+                    //旋转子弹
+                    let rotation = Math.atan2(this.direction.y, this.direction.x) * (180 / Math.PI) - 90;
+                    this.node.angle = rotation;
+                }
             }
             else
             {
@@ -79,7 +89,7 @@ export class Bullet extends Component implements IObserver {
         
         if (this.isOutScreen(x, y))
         {
-            this.recycleSelf(false);
+            this.recycleSelf();
             return;
         }
         this.node.setPosition(v3(x, y));
@@ -92,12 +102,8 @@ export class Bullet extends Component implements IObserver {
         return x < - screenWidth / 2 - 30 || x > screenWidth / 2 + 30 || y < - screenHeight / 2 - 30 || y > screenHeight / 2 + 30;
     }
 
-    recycleSelf(needEffect: boolean)
+    recycleSelf()
     {
-        if (needEffect)
-        {
-            EventManager.Instance.createEffect(this.target.position, this.shoterName, true);
-        }
         let bulletPool = this.node.parent.getComponent(BulletLayer).bulletPools.get(this.id);
         bulletPool.put(this.node);
     }

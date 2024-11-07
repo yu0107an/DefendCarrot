@@ -13,7 +13,7 @@ export class BulletLayer extends Component {
 
     initBulletPool(weaponDt: any, bulletTypeCount: number)
     {
-        for (let i = 0; i < 2; i++)
+        for (let i = 0; i < bulletTypeCount; i++)
         {
             this.bulletPools.set(weaponDt[i], new NodePool('Bullet'));
             let nodePool = this.bulletPools.get(i + 1001);

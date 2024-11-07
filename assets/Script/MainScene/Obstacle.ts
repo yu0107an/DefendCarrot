@@ -1,5 +1,6 @@
 import { _decorator, Component, Node, ProgressBar } from 'cc';
 import { EventManager } from '../Frame/EventManager';
+import { AudioManager } from '../Frame/AudioManager';
 const { ccclass, property } = _decorator;
 
 @ccclass('Obstacle')
@@ -54,6 +55,7 @@ export class Obstacle extends Component {
 
     onDestroy()
     {
+        AudioManager.Instance.playAudioById(20);
         if (this.node.parent.children.length === 0)
         {
             EventManager.Instance.showObstacleClear();

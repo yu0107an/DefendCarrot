@@ -83,6 +83,7 @@
 		"createprice":[160,220,260],
 		"sellprice":[128,304,512],
 		"SpinType":false,
+		"audioId":24,
 		"icon":"TFan.png",
 		"shopimg":
 		[

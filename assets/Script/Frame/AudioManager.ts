@@ -10,6 +10,7 @@ export class AudioManager extends Component {
         5:shootSelect  6:towerSell  7:towerUpdate  8:towerBuild   9:towerDesSelect
        10:carrot1     11:carrot2   12:carrot3     13:crash       14:Fly151
        15:Fly161      16:Fly251    17:MenuSelect  18:Bottle      19:Shit
+       20:Object      21:Lose      22:FinalWave   23:Ach         24:Fan
     */
     private static instance: AudioManager;
     private constructor() { super(); };

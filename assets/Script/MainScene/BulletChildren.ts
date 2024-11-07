@@ -33,16 +33,18 @@ export class BulletChildren extends Component {
                 }
                 break;
             case 32:
-                if (this.node.parent.getComponent(Bullet).target !== other.node)
-                {
-                    return;
-                }
                 EventManager.Instance.reduceHp_Obstacle(other.node, self.node.parent.getComponent(Bullet).atk);
                 break;
             default:
                 break;
         }
-        this.node.parent.getComponent(Bullet).recycleSelf(true);
+
+        let bulletTs = this.node.parent.getComponent(Bullet);
+        if (!bulletTs.isPenetrate)
+        {
+            bulletTs.recycleSelf();
+        }
+        EventManager.Instance.createEffect(other.node.position, bulletTs.shoterName, true);
     }
 
     protected onDestroy(): void {

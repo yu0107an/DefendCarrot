@@ -130,15 +130,17 @@ export class EventManager {
         this.UI2Ts.closeLoading();
     }
 
-    //展示最后一波的图片
+    //展示最后一波
     showFinalWave()
     {
+        AudioManager.Instance.playAudioById(22);
         this.UI2Ts.showFinalWave();
     }
 
-    //展示障碍物全部清除的图片
+    //展示障碍物全部清除
     showObstacleClear()
     {
+        AudioManager.Instance.playAudioById(23);
         this.UI2Ts.showObstacleClear();
     }
 
@@ -306,6 +308,7 @@ export class EventManager {
     //游戏失败
     gameOver()
     {
+        AudioManager.Instance.playAudioById(21);
         this.UI2Ts.showGameOver();
         this.UI2Ts.disableUpButton();
         director.pause();

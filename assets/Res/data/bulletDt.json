@@ -4,6 +4,8 @@
 		"nAck":50,
 		"bRotate":0,
 		"speedbuff":0,
+		"isFollowTarget":true,
+		"isPenetrate":false,
 		"moveimg":
 		[
 			[
@@ -34,6 +36,8 @@
 		"nAck":10,
 		"bRotate":0,
 		"speedbuff":45,
+		"isFollowTarget":true,
+		"isPenetrate":false,
 		"moveimg":
 		[
 			[
@@ -61,6 +65,8 @@
 		"nAck":70,
 		"bRotate":0,
 		"speedbuff":0,
+		"isFollowTarget":false,
+		"isPenetrate":true,
 		"moveimg":
 		[
 			[
