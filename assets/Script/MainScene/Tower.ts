@@ -98,7 +98,6 @@ export class Tower extends Component implements IObserver {
         else
         {
             this.attackTarget_Enemy.splice(this.attackTarget_Enemy.findIndex(target), 1);
-            this.changeState('idle');
         }
         this.curAttackTarget = this.attackTarget_Enemy.get(0);
     }
@@ -150,20 +149,18 @@ export class Tower extends Component implements IObserver {
             return;
         }
         this.curState = state;
-        if (this.curState === 'idle')
+        let animation = this.node.children[this.level - 1].getComponent(Animation);
+        let stateInfo = animation.getState(this.node.children[this.level - 1].name);
+        if (stateInfo)
         {
-            let animation = this.node.children[this.level - 1].getComponent(Animation);
-            let state = animation.getState(this.node.children[this.level - 1].name);
-            if (state)
-            {
-                state.time = 0;
-                state.sample();
-            }
-            animation.stop();
+            stateInfo.time = 0;
+            stateInfo.sample();
         }
-        else if(this.curState === 'shot')
+        animation.stop();
+        if(this.curState === 'shot')
         {
-            this.node.children[this.level - 1].getComponent(Animation).play();
+            animation.stop();
+            animation.play();
         }
     }
 
@@ -173,7 +170,12 @@ export class Tower extends Component implements IObserver {
         if (!this.attackPoint)
         {
             target = this.curAttackTarget;
+            if (!this.curAttackTarget)
+            {
+                return;
+            }
         }
+        this.changeState('idle');
         EventManager.Instance.createBullet(this.node.name, this.id, this.level, this.node.position, target);
         AudioManager.Instance.playAudioById(this.audioId);
     }

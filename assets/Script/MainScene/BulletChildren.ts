@@ -3,7 +3,7 @@ import { EventManager } from '../Frame/EventManager';
 import { Bullet } from './Bullet';
 const { ccclass, property } = _decorator;
 
-@ccclass('BulletChild')
+@ccclass('BulletChildren')
 export class BulletChildren extends Component {
     
     setActive(active: boolean)

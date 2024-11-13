@@ -40,11 +40,13 @@ export class Obstacle extends Component {
     reduceHp(atk: number)
     {
         this.curHp -= atk;
-        if (this.curHp <= 0)
-        {
+        if (this.curHp <= 0) {
             EventManager.Instance.createEffect(this.node.position, 'Air', true);
             EventManager.Instance.createEffect(this.node.position, 'Money', true, null, this.reward);
-            EventManager.Instance.cancelAttackPoint();
+            if (this.node === EventManager.Instance.getAttackPoint())
+            {
+                EventManager.Instance.cancelAttackPoint();
+            }
             EventManager.Instance.changeCoin(this.reward);
             this.node.destroy();
         }
