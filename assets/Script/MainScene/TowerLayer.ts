@@ -1,6 +1,6 @@
 import { _decorator, Component, instantiate, JsonAsset, Node, Prefab, v3, Vec3 } from 'cc';
 import { Tower } from './Tower';
-import { Game } from './Game';
+import { GameMgr } from './GameMgr';
 import { EventManager, IObserverType } from '../Frame/EventManager';
 const { ccclass, property } = _decorator;
 
@@ -25,7 +25,7 @@ export class TowerLayer extends Component implements IObserver {
         let tower = instantiate(this.TowerPrefab[id - 1001]);
         let data = this.weaponDt.json[id - 1001];
         tower.name = data.icon.split('.', 1)[0];
-        let isPaused = this.node.parent.getComponent(Game).isPaused;
+        let isPaused = this.node.parent.getComponent(GameMgr).isPaused;
         this.node.addChild(tower);
         tower.setPosition(v3(pos.x - 480, pos.y - 320));
         tower.getComponent(Tower).init(data, isPaused, EventManager.Instance.getAttackPoint());

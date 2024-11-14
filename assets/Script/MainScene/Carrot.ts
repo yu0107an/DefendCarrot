@@ -14,8 +14,9 @@ export class Carrot extends Component {
     animation: Animation;
     sch: any;
 
-    init()
+    init(pos: Vec3)
     {
+        this.node.setPosition(pos.x - 480, pos.y - 320);
         this.animation = this.getComponent(Animation);
         this.sch = this.schedule(() => {
             if (!this.animation.getState('CarrotClick').isPlaying && this.curHp === 10)
@@ -23,10 +24,6 @@ export class Carrot extends Component {
                 this.animation.play('CarrotIdle');
             }
         }, 5, macro.REPEAT_FOREVER, 7);
-    }
-
-    enableClick()
-    {
         this.node.on(Node.EventType.TOUCH_START, this.click, this);
     }
 

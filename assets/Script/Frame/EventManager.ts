@@ -1,5 +1,5 @@
 import { _decorator, director, find, Node, v3, Vec3 } from 'cc';
-import { Game } from '../MainScene/Game';
+import { GameMgr } from '../MainScene/GameMgr';
 import { EffectLayer } from '../MainScene/EffectLayer';
 import { UI1 } from '../MainScene/UI1';
 import { Map } from '../MainScene/Map';
@@ -11,6 +11,7 @@ import { EnemyLayer } from '../MainScene/EnemyLayer';
 import { ObstacleLayer } from '../MainScene/ObstacleLayer';
 import { AudioManager } from './AudioManager';
 import { GameInfo } from './GameInfo';
+import { struct } from './AStar';
 const { ccclass, property } = _decorator;
 
 export enum IObserverType
@@ -23,7 +24,7 @@ export enum IObserverType
 export class EventManager {
     
     private static instance: EventManager;
-    private gameTs: Game;
+    private gameTs: GameMgr;
     private mapTs: Map;
     private UI1Ts: UI1;
     private UI2Ts: UIControl;
@@ -53,7 +54,7 @@ export class EventManager {
 
     init()
     {
-        this.gameTs = find('Canvas/Game').getComponent(Game);
+        this.gameTs = find('Canvas/Game').getComponent(GameMgr);
         this.mapTs = find('Canvas/Map').getComponent(Map);
         this.UI1Ts = find('Canvas/UI1').getComponent(UI1);
         this.UI2Ts = find('Canvas/UI2').getComponent(UIControl);
@@ -145,15 +146,15 @@ export class EventManager {
     }
 
     //初始化关卡数据(关卡开始时使用)
-    initLevelData(weaponDt: any, monsterDt: any, waveDt: any)
+    initLevelData(weaponDt: any, monsterDt: any, waveDt: any): struct[]
     {
         let enemyPath = this.mapTs.getEnemyPath();
         find('Canvas/UI2/ChoiceCard').getComponent(ChoiceCard).initAllCard(weaponDt);
         this.enemyLayerTs.init(monsterDt, waveDt, enemyPath);
         this.bulletLayerTs.initBulletPool(weaponDt, weaponDt.length);
         this.obstacleLayerTs.init(this.mapTs.getObstacleInfo());
-        this.UI2Ts.init(v3(enemyPath[enemyPath.length - 1].x, enemyPath[enemyPath.length - 1].y));
-        this.UI1Ts.init(v3(enemyPath[0].x, enemyPath[0].y), v3(enemyPath[1].x, enemyPath[1].y));
+        this.UI2Ts.init();
+        return enemyPath;
     }
 
     //创建effect
@@ -276,7 +277,7 @@ export class EventManager {
     //Carrot扣血
     reduceHp_Carrot(count: number)
     {
-        this.UI2Ts.reduceHp_Carrot(count);
+        this.gameTs.reduceHp_Carrot(count);
     }
 
     //障碍物扣血

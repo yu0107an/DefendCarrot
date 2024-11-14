@@ -5,7 +5,6 @@ import { AttackPoint } from './AttackPoint';
 import { GameInfo } from '../Frame/GameInfo';
 import { CountDown } from './CountDown';
 import { AudioManager } from '../Frame/AudioManager';
-import { Carrot } from './Carrot';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIControl')
@@ -15,8 +14,6 @@ export class UIControl extends Component implements IObserver {
     atlas: SpriteAtlas;
     @property(Prefab)
     attackPointPrefab: Prefab;
-    @property(Prefab)
-    carrotPrefab: Prefab;
     attackPoint: Node;
     choiceCard: Node;
     isMenuOpen: boolean = false;
@@ -31,18 +28,13 @@ export class UIControl extends Component implements IObserver {
         this.coin = this.node.getChildByPath('UP/Coin');
     }
 
-    init(carrotPos: Vec3)
+    init()
     {
         this.node.getChildByPath('UP/WaveCount/AllWave').getComponent(Label).string = GameInfo.Instance.maxWave.toString();
         this.choiceCard = this.node.getChildByName('ChoiceCard');
         this.disableUpButton();
 
         this.node.getChildByName('CountDown').getComponent(CountDown).init();
-
-        let carrot = instantiate(this.carrotPrefab);
-        this.node.addChild(carrot);
-        carrot.setPosition(carrotPos.x - 480, carrotPos.y - 320);
-        this.node.getChildByName('Carrot').getComponent(Carrot).init();
     }
     
     showLoading()
@@ -67,12 +59,6 @@ export class UIControl extends Component implements IObserver {
         this.node.getChildByName('UP').getComponentsInChildren(Button).forEach((value) => {
             value.interactable = true;
         })
-        this.node.getChildByName('Carrot').getComponent(Carrot).enableClick();
-    }
-
-    reduceHp_Carrot(count: number)
-    {
-        this.node.getChildByName('Carrot').getComponent(Carrot).reduceHp(count);
     }
 
     showGameOver()

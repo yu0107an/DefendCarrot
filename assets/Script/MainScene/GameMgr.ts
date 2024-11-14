@@ -1,10 +1,12 @@
-import { _decorator, Component, director, JsonAsset, Node } from 'cc';
+import { _decorator, Component, director, JsonAsset, Node, v3 } from 'cc';
 import { GameInfo } from '../Frame/GameInfo';
 import { EventManager } from '../Frame/EventManager';
+import { StartNode } from './StartNode';
+import { Carrot } from './Carrot';
 const { ccclass, property } = _decorator;
 
-@ccclass('Game')
-export class Game extends Component {
+@ccclass('GameMgr')
+export class GameMgr extends Component {
 
     @property(JsonAsset)
     levelDt: JsonAsset;//关卡数据
@@ -39,7 +41,9 @@ export class Game extends Component {
             let monsterDt = this.levelDt.json[GameInfo.Instance.curTheme - 1].monsterid[GameInfo.Instance.curLevel - 1];
             let waveDt = this.levelDt.json[GameInfo.Instance.curTheme - 1].wavemonstercount[GameInfo.Instance.curLevel - 1];
             this.gameCoinChanged(this.levelDt.json[GameInfo.Instance.curTheme - 1].initgold[GameInfo.Instance.curLevel - 1]);
-            EventManager.Instance.initLevelData(weaponDt, monsterDt, waveDt);
+            const enemyPath = EventManager.Instance.initLevelData(weaponDt, monsterDt, waveDt);
+            this.node.getChildByName('Start').getComponent(StartNode).init(v3(enemyPath[0].x, enemyPath[0].y), v3(enemyPath[1].x, enemyPath[1].y));
+            this.node.getChildByName('Carrot').getComponent(Carrot).init(v3(enemyPath[enemyPath.length - 1].x, enemyPath[enemyPath.length - 1].y));
             EventManager.Instance.closeLoading();
         }, 0.5);
     }
@@ -63,6 +67,11 @@ export class Game extends Component {
     setGameSpeed(speed: number)
     {
         this.gameSpeed = speed;
+    }
+
+    reduceHp_Carrot(count: number)
+    {
+        this.node.getChildByName('Carrot').getComponent(Carrot).reduceHp(count);
     }
 
     restartGame()
